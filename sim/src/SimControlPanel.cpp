@@ -4,7 +4,7 @@
 #include <QMessageBox>
 #include <ParamHandler.hpp>
 #include <leg_control_command_lcmt.hpp>
-#include "ui_SimControlPanel.h"
+#include "../build/sim/ui_SimControlPanel.h"
 #include "JoystickTest.h"
 
 
@@ -347,9 +347,11 @@ void SimControlPanel::on_startButton_clicked() {
   RobotType robotType;
 
   if (ui->cheetah3Button->isChecked()) {
-    robotType = RobotType::CHEETAH_3;
+      robotType = RobotType::CHEETAH_3;
   } else if (ui->miniCheetahButton->isChecked()) {
-    robotType = RobotType::MINI_CHEETAH;
+      robotType = RobotType::MINI_CHEETAH;
+  } else if (ui->iustButton->isChecked()) {
+      robotType = RobotType::IUST;
   } else {
     createErrorMessage("Error: you must select a robot");
     return;
@@ -368,7 +370,7 @@ void SimControlPanel::on_startButton_clicked() {
   printf("[SimControlPanel] Initialize Graphics...\n");
   _graphicsWindow = new Graphics3D();
   _graphicsWindow->show();
-  _graphicsWindow->resize(1280, 720);
+  _graphicsWindow->resize(1920, 1080);
 
   if (_simulationMode) {
     // run a simulation
