@@ -12,6 +12,7 @@
 #include "Controllers/OrientationEstimator.h"
 #include "Dynamics/Cheetah3.h"
 #include "Dynamics/MiniCheetah.h"
+#include "Dynamics/IUST.h"
 #include "Utilities/Utilities_print.h"
 #include "ParamHandler.hpp"
 #include "Utilities/Timer.h"
@@ -37,8 +38,8 @@ void RobotRunner::init() {
   // Build the appropriate Quadruped object
   if (robotType == RobotType::MINI_CHEETAH) {
     _quadruped = buildMiniCheetah<float>();
-  } else {
-    _quadruped = buildCheetah3<float>();
+  } else if (robotType == RobotType::IUST) {
+    _quadruped = buildIUST<float>();
   }
 
   // Initialize the model and robot data

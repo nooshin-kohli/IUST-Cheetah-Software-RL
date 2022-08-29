@@ -14,6 +14,9 @@
 
 #include "FloatingBaseModel.h"
 #include "Quadruped.h"
+#include "../cTypes.h"
+#include "../cppTypes.h"
+#include "../Types.h"
 
 /*!
  * Generate a Quadruped model of IUST robot
@@ -94,7 +97,7 @@ Quadruped<T> buildIUST()
     bodyRotationalInertia << 11253, 0, 0, 0, 36203, 0, 0, 0, 42673;
     bodyRotationalInertia = bodyRotationalInertia * 1e-6;
     Vec3<T> bodyCOM(0, 0, 0);
-    SpatialInertia<T> bodyInertia(milab._bodyMass, bodyCOM, bodyRotationalInertia);
+    SpatialInertia<T> bodyInertia(iust._bodyMass, bodyCOM, bodyRotationalInertia);
 
     //Adjust IUST inertias
     iust._abadInertia = abadInertia;
