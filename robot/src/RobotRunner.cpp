@@ -123,6 +123,9 @@ void RobotRunner::run() {
         } else if (robotType == RobotType::CHEETAH_3) {
           kpMat << 50, 0, 0, 0, 50, 0, 0, 0, 50;
           kdMat << 1, 0, 0, 0, 1, 0, 0, 0, 1;
+        } else if (robotType == RobotType::IUST) {
+          kpMat << 5, 0, 0, 0, 5, 0, 0, 0, 5;
+          kdMat << 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1;
         } else {
           assert(false);
         } 

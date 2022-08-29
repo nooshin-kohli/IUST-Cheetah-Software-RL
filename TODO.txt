@@ -1,2 +1,3 @@
 TODO:
-	fixing common/include/Dynamics/IUST.h
+	- Change real robot parameters @common/include/Dynamics/IUST.h
+	- Modify kp kd for IUST robot @robot/src/RobotRunner.cpp
