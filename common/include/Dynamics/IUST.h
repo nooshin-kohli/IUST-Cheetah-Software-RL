@@ -14,14 +14,11 @@
 
 #include "FloatingBaseModel.h"
 #include "Quadruped.h"
-#include "../cTypes.h"
-#include "../cppTypes.h"
-#include "../Types.h"
 
 /*!
  * Generate a Quadruped model of IUST robot
  */
-template <typename T>
+template<typename T>
 Quadruped<T> buildIUST()
 {
     Quadruped<T> iust;
@@ -60,10 +57,10 @@ Quadruped<T> buildIUST()
     rotorRotationalInertiaZ << 33, 0, 0, 0, 33, 0, 0, 0, 63;
     rotorRotationalInertiaZ = rotorRotationalInertiaZ * 1e-6;
 
-    Mat3<T> RY = coordinateRotation<T>(CoordinateAxis::Y, M_PI / 2);
-    Mat3<T> RX = coordinateRotation<T>(CoordinateAxis::X, M_PI / 2);
-    Mat3<T> rotorRotationalInertiaX = RY * rotorRotationalInertiaZ * RY.transpose();
-    Mat3<T> rotorRotationalInertiaY = RX * rotorRotationalInertiaZ * RX.transpose();
+    Mat3 <T> RY = coordinateRotation<T>(CoordinateAxis::Y, M_PI / 2);
+    Mat3 <T> RX = coordinateRotation<T>(CoordinateAxis::X, M_PI / 2);
+    Mat3 <T> rotorRotationalInertiaX = RY * rotorRotationalInertiaZ * RY.transpose();
+    Mat3 <T> rotorRotationalInertiaY = RX * rotorRotationalInertiaZ * RX.transpose();
 
     //Spatial inertia for abad
     Mat3<T> abadRotationalInertia;

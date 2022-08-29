@@ -40,6 +40,8 @@ void RobotRunner::init() {
     _quadruped = buildMiniCheetah<float>();
   } else if (robotType == RobotType::IUST) {
     _quadruped = buildIUST<float>();
+  } else {
+    _quadruped = buildCheetah3<float>();
   }
 
   // Initialize the model and robot data
@@ -207,6 +209,8 @@ void RobotRunner::finalizeStep() {
     _legController->updateCommand(spiCommand);
   } else if (robotType == RobotType::CHEETAH_3) {
     _legController->updateCommand(tiBoardCommand);
+  } else if (robotType == RobotType::IUST) {
+    _legController->updateCommand(spiCommand);
   } else {
     assert(false);
   }
