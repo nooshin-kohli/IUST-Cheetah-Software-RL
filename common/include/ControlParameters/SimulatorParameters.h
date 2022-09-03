@@ -11,10 +11,10 @@
 
 #include "ControlParameters/ControlParameters.h"
 
-#define SIMULATOR_DEFAULT_PARAMETERS "/simulator-defaults.yaml"
+#define SIMULATOR_DEFAULT_PARAMETERS "/default-simulator-parameters.yaml"
 #define MINI_CHEETAH_DEFAULT_PARAMETERS "/mini-cheetah-defaults.yaml"
 #define CHEETAH_3_DEFAULT_PARAMETERS "/cheetah-3-defaults.yaml"
-#define IUST_DEFAULT_PARAMETERS "iust-defaults.yaml"
+#define IUST_DEFAULT_PARAMETERS "iust-robot-parameters.yaml"
 
 /*!
  * Simulator specific control parameters

@@ -1,6 +1,8 @@
 TODO:
 	- Change real robot parameters @common/include/Dynamics/IUST.h
 	- Modify kp kd for IUST robot @robot/src/RobotRunner.cpp
-	- Change RobotParameters @config/iust-defaults.yaml
+	- Change RobotParameters @config/iust-robot-parameters.yaml
 	- Modify addIUST @sim/src/DrawList.cpp
 	- Add robot object files @recources
+	- Change UserParameters @config/iust-user-parameters.yaml
+
