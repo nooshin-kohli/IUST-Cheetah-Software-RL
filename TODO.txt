@@ -3,3 +3,4 @@ TODO:
 	- Modify kp kd for IUST robot @robot/src/RobotRunner.cpp
 	- Change RobotParameters @config/iust-defaults.yaml
 	- Modify addIUST @sim/src/DrawList.cpp
+	- Add robot object files @recources
