@@ -222,7 +222,174 @@ void HardwareBridge::handleControlParameter(
   _interfaceLCM.publish("interface_response", &_parameter_response_lcmt);
 }
 
+/*
+ * ======================================================================================
+ * Following class functions are specifically defined for IUST robot
+ */
+IUSTrobotHardwareBridge::IUSTrobotHardwareBridge (RobotController* robot_ctrl, bool load_parameters_from_file)
+  : HardwareBridge(robot_ctrl), _spiLcm(getLcmUrl(255)), _microstrainLcm(getLcmUrl(255)) {
+    _load_parameters_from_file = load_parameters_from_file;
+  }
 
+// Initialize Milab specific hardware
+void IUSTrobotHardwareBridge::initHardware() {
+  _vectorNavData.quat << 1, 0, 0, 0;
+#ifndef USE_MICROSTRAIN
+  printf("[IUSTrobotHardware] Init vectornav\n");
+  if (!init_vectornav(&_vectorNavData)) {
+    printf("Vectornav failed to initialize\n");
+    //initError("failed to initialize vectornav!\n", false);
+  }
+#endif
+  init_spi();
+  _microstrainInit = _microstrainImu.tryInit(0, 921600);
+}
+
+// Main method for IUST robot hardwar
+void IUSTrobotHardwareBridge::run() {
+  initCommon();
+  initHardware();
+
+  if(_load_parameters_from_file) {
+    printf("[Hardware Bridge] Loading parameters from file...\n");
+
+    try {
+      _robotParams.initializeFromYamlFile(THIS_COM "config/iust-robot-parameters.yaml");
+    } catch(std::exception& e) {
+      printf("Failed to initialize robot parameters from yaml file: %s\n", e.what());
+      exit(1);
+    }
+
+    if(!_robotParams.isFullyInitialized()) {
+      printf("Failed to initialize all robot parameters\n");
+      exit(1);
+    }
+
+    printf("Loaded robot parameters\n");
+
+    if(_userControlParameters) {
+      try {
+        _userControlParameters->initializeFromYamlFile(THIS_COM "config/iust-user-parameters.yaml");
+      } catch(std::exception& e) {
+        printf("Failed to initialize user parameters from yaml file: %s\n", e.what());
+        exit(1);
+      }
+
+      if(!_userControlParameters->isFullyInitialized()) {
+        printf("Failed to initialize all user parameters\n");
+        exit(1);
+      }
+
+      printf("Loaded user parameters\n");
+    } else {
+      printf("Did not load user parameters because there aren't any\n");
+    }
+  } else {
+    printf("[Hardware Bridge] Loading parameters over LCM...\n");
+    while (!_robotParams.isFullyInitialized()) {
+      printf("[Hardware Bridge] Waiting for robot parameters...\n");
+      usleep(1000000);
+    }
+
+    if(_userControlParameters) {
+      while (!_userControlParameters->isFullyInitialized()) {
+        printf("[Hardware Bridge] Waiting for user parameters...\n");
+        usleep(1000000);
+      }
+    }
+  }
+
+
+
+  printf("[Hardware Bridge] Got all parameters, starting up!\n");
+
+  _robotRunner = new RobotRunner(_controller, &taskManager, _robotParams.controller_dt, "robot-control");
+
+  _robotRunner->driverCommand = &_gamepadCommand;
+  _robotRunner->spiData = &_spiData;
+  _robotRunner->spiCommand = &_spiCommand;
+  _robotRunner->robotType = RobotType::IUST;
+  _robotRunner->vectorNavData = &_vectorNavData;
+  _robotRunner->controlParameters = &_robotParams;
+  _robotRunner->visualizationData = &_visualizationData;
+  _robotRunner->cheetahMainVisualization = &_mainCheetahVisualization;
+
+  _firstRun = false;
+
+  // init control thread
+  statusTask.start();
+
+  // spi Task start
+  PeriodicMemberFunction<IUSTrobotHardwareBridge> spiTask(
+      &taskManager, .002, "spi", &IUSTrobotHardwareBridge::runSpi, this);
+  spiTask.start();
+
+  // microstrain
+  if(_microstrainInit)
+    _microstrainThread = std::thread(&IUSTrobotHardwareBridge::runMicrostrain, this);
+
+  // robot controller start
+  _robotRunner->start();
+
+  // visualization start
+  PeriodicMemberFunction<IUSTrobotHardwareBridge> visualizationLCMTask(
+      &taskManager, .0167, "lcm-vis",
+      &IUSTrobotHardwareBridge::publishVisualizationLCM, this);
+  visualizationLCMTask.start();
+
+  // rc controller
+  _port = init_sbus(false);  // Not Simulation
+  PeriodicMemberFunction<HardwareBridge> sbusTask(
+      &taskManager, .005, "rc_controller", &HardwareBridge::run_sbus, this);
+  sbusTask.start();
+
+  // temporary hack: microstrain logger
+  PeriodicMemberFunction<IUSTrobotHardwareBridge> microstrainLogger(
+      &taskManager, .001, "microstrain-logger", &IUSTrobotHardwareBridge::logMicrostrain, this);
+  microstrainLogger.start();
+
+  for (;;) {
+    usleep(1000000);
+    // printf("joy %f\n", _robotRunner->driverCommand->leftStickAnalog[0]);
+  }
+}
+
+void IUSTrobotHardwareBridge::runMicrostrain() {
+  while(true) {
+    _microstrainImu.run();
+
+#ifdef USE_MICROSTRAIN
+    _vectorNavData.accelerometer = _microstrainImu.acc;
+    _vectorNavData.quat[0] = _microstrainImu.quat[1];
+    _vectorNavData.quat[1] = _microstrainImu.quat[2];
+    _vectorNavData.quat[2] = _microstrainImu.quat[3];
+    _vectorNavData.quat[3] = _microstrainImu.quat[0];
+    _vectorNavData.gyro = _microstrainImu.gyro;
+#endif
+  }
+}
+
+void IUSTrobotHardwareBridge::logMicrostrain() {
+  _microstrainImu.updateLCM(&_microstrainData);
+  _microstrainLcm.publish("microstrain", &_microstrainData);
+}
+
+void IUSTrobotHardwareBridge::runSpi() {
+  spi_command_t* cmd = get_spi_command();
+  spi_data_t* data = get_spi_data();
+
+  memcpy(cmd, &_spiCommand, sizeof(spi_command_t));
+  spi_driver_run();
+  memcpy(&_spiData, data, sizeof(spi_data_t));
+
+  _spiLcm.publish("spi_data", data);
+  _spiLcm.publish("spi_command", cmd);
+}
+
+/*
+ * ======================================================================================
+ * Following class functions are specifically defined for Mini Cheetah
+ */
 MiniCheetahHardwareBridge::MiniCheetahHardwareBridge(RobotController* robot_ctrl, bool load_parameters_from_file)
     : HardwareBridge(robot_ctrl), _spiLcm(getLcmUrl(255)), _microstrainLcm(getLcmUrl(255)) {
   _load_parameters_from_file = load_parameters_from_file;
@@ -421,6 +588,10 @@ void MiniCheetahHardwareBridge::runSpi() {
   _spiLcm.publish("spi_command", cmd);
 }
 
+/*
+ * ======================================================================================
+ * Following class functions are specifically defined for Cheetah 3
+ */
 void Cheetah3HardwareBridge::runEcat() {
   rt_ethercat_set_command(_tiBoardCommand);
   rt_ethercat_run();
