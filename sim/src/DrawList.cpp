@@ -43,7 +43,7 @@ void DrawList::loadFiles() {
   _cubeLoadIndex = 9;
   _miniCheetahLoadIndex = 4;
   _cheetah3LoadIndex = 0;
-  _iustLoadIndex =  0;
+  _iustLoadIndex =  10;
 }
 /*!
  * Load the cheetah 3 model and build the draw list.
