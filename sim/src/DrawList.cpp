@@ -10,14 +10,14 @@
 void DrawList::loadFiles() {
   printf("[DrawList] Load object files...\n");
   std::vector<std::string> names = {
-      "c3_body.obj",         "mini_abad.obj",
-      "c3_upper_link.obj",   "c3_lower_link.obj",
-      "mini_body.obj",       "mini_abad.obj",
-      "mini_upper_link.obj", "mini_lower_link.obj",
-      "sphere.obj",          "cube.obj",
-      
-      "iust_body.obj", "iust_hip.obj", "iust_upper_link.obj",
-      "iust_upper_link_mirror.obj", "iust_lower_link.obj"
+      "c3_body.obj",            "mini_abad.obj",
+      "c3_upper_link.obj",      "c3_lower_link.obj",
+      "mini_body.obj",          "mini_abad.obj",
+      "mini_upper_link.obj",    "mini_lower_link.obj",
+      "sphere.obj",             "cube.obj",
+      "iust_body.obj",          "iust_abad.obj",
+      "iust_upper_link.obj",    "iust_upper_link_mirror.obj",
+      "iust_lower_link.obj"
       };
   for (const auto& name : names) {
     std::string filename = _baseFileName + name;
@@ -43,7 +43,7 @@ void DrawList::loadFiles() {
   _cubeLoadIndex = 9;
   _miniCheetahLoadIndex = 4;
   _cheetah3LoadIndex = 0;
-  _iustLoadIndex = 10;
+  _iustLoadIndex =  0;
 }
 /*!
  * Load the cheetah 3 model and build the draw list.
