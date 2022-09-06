@@ -48,7 +48,7 @@ template <typename T>
 void FSM_State_StandUp<T>::run() {
 
   if(this->_data->_quadruped->_robotType == RobotType::MINI_CHEETAH) {
-    T hMax = 0.25;
+    T hMax = 0.4;
     T progress = 2 * iter * this->_data->controlParameters->controller_dt;
 
     if (progress > 1.){ progress = 1.; }

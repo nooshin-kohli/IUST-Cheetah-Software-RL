@@ -45,8 +45,8 @@ void FSM_State_BalanceStand<T>::onEnter() {
   
   _ini_body_pos = (this->_data->_stateEstimator->getResult()).position;
 
-  if(_ini_body_pos[2] < 0.2) {
-    _ini_body_pos[2] = 0.3;
+  if(_ini_body_pos[2] < 0.4) {
+    _ini_body_pos[2] = 0.45;
   }
 
   last_height_command = _ini_body_pos[2];
