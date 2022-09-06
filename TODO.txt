@@ -9,8 +9,10 @@ TODO:
 
 	- Change UserParameters @config/iust-user-parameters.yaml
 
-	- Modify robot height @user/MIT_Controller/FSM_States/FSM_State_BalanceStand.cpp -> 48,49
+	- Modify robot height @user/MIT_Controller/FSM_States/FSM_State_BalanceStand.cpp -> 52,53
 	
 	- Modify safety condition of robot posture, foot position and foot feedforward force
 			@user/MIT_Controller/FSM_States/FSM_State_SafetyChecker.cpp
+
+	- Modify iterations_between_mpc @user/MIT_Controller/FSM_States/FSM_State_Locomotion.cpp -> 27
 

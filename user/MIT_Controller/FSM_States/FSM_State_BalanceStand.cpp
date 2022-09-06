@@ -45,7 +45,11 @@ void FSM_State_BalanceStand<T>::onEnter() {
   
   _ini_body_pos = (this->_data->_stateEstimator->getResult()).position;
 
-  if(_ini_body_pos[2] < 0.4) {
+  if (this->_data->_quadruped->_robotType == RobotType::MINI_CHEETAH
+    && _ini_body_pos[2] < 0.25) {
+      _ini_body_pos[2] = 0.30;
+  } else if (this->_data->_quadruped->_robotType == RobotType::IUST
+    && _ini_body_pos[2] < 0.40) {
     _ini_body_pos[2] = 0.45;
   }
 
