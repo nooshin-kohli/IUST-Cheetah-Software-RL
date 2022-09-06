@@ -24,8 +24,8 @@ WBC_Ctrl<T>::WBC_Ctrl(FloatingBaseModel<T> model):
   //_wbic_data->_W_floating[5] = 0.1;
   _wbic_data->_W_rf = DVec<T>::Constant(12, 1.);
 
-  _Kp_joint.resize(cheetah::num_leg_joint, 5.);
-  _Kd_joint.resize(cheetah::num_leg_joint, 1.5);
+  _Kp_joint.resize(cheetah::num_leg_joint, 3.0);
+  _Kd_joint.resize(cheetah::num_leg_joint, 0.2);
 
   //_Kp_joint_swing.resize(cheetah::num_leg_joint, 10.);
   //_Kd_joint_swing.resize(cheetah::num_leg_joint, 1.5);
@@ -126,14 +126,19 @@ void WBC_Ctrl<T>::_UpdateLegCMD(ControlFSMData<T> & data){
   }
 
 
-  // Knee joint non flip barrier
+/*
+ * Knee joint soft barrier -- 45degree
+ * Knee joint hard barrier -- 33degree
+ */
   for(size_t leg(0); leg<4; ++leg){
-    if(cmd[leg].qDes[2] < 0.3){
-      cmd[leg].qDes[2] = 0.3;
+    if(cmd[leg].qDes[2] < 0.78){
+      cmd[leg].qDes[2] = 0.78;
     }
-    if(data._legController->datas[leg].q[2] < 0.3){
-      T knee_pos = data._legController->datas[leg].q[2]; 
-      cmd[leg].tauFeedForward[2] = 1./(knee_pos * knee_pos + 0.02);
+    if(data._legController->datas[leg].q[2] < 0.78){
+      T hard_barrier = 0.58;
+      T knee_pos = data._legController->datas[leg].q[2];
+      T barrier_factor = knee_pos - hard_barrier;
+      cmd[leg].tauFeedForward[2] = 1.0 / (barrier_factor * barrier_factor + 0.02);
     }
   }
 }

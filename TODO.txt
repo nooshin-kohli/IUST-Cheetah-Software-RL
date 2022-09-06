@@ -18,3 +18,5 @@ TODO:
 
 	- Modify user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 45,46,82,135,193,628
 
+	- Modify knee barrier degree @user/MIT_Controller/Controllers/WBC_Ctrl/WBC_Ctrl.cpp -> 134,135,137
+
