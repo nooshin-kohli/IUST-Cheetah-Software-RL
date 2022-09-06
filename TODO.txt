@@ -16,3 +16,5 @@ TODO:
 
 	- Modify iterations_between_mpc @user/MIT_Controller/FSM_States/FSM_State_Locomotion.cpp -> 27
 
+	- Modify user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 45,46,82,135,193,628
+

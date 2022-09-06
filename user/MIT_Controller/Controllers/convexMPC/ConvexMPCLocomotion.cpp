@@ -41,8 +41,15 @@ ConvexMPCLocomotion::ConvexMPCLocomotion(float _dt, int _iterations_between_mpc,
   dtMPC = dt * iterationsBetweenMPC;
   default_iterations_between_mpc = iterationsBetweenMPC;
   printf("[Convex MPC] dt: %.3f iterations: %d, dtMPC: %.3f\n", dt, iterationsBetweenMPC, dtMPC);
-  setup_problem(dtMPC, horizonLength, 0.4, 120);
-  //setup_problem(dtMPC, horizonLength, 0.4, 650); // DH
+
+  if (_iterations_between_mpc == 30/2) {        //IUST
+      setup_problem(dtMPC, horizonLength, 0.4, 300);
+  } else if (_iterations_between_mpc == 27/2) { // MINI-CHEETAH
+      setup_problem(dtMPC, horizonLength, 0.4, 120);
+  } else {                                      //CHEETAH3
+      setup_problem(dtMPC, horizonLength, 0.4, 650); // DH
+  }
+
   rpy_comp[0] = 0;
   rpy_comp[1] = 0;
   rpy_comp[2] = 0;
@@ -71,11 +78,13 @@ void ConvexMPCLocomotion::recompute_timing(int iterations_per_mpc) {
 }
 
 void ConvexMPCLocomotion::_SetupCommand(ControlFSMData<float> & data){
-  if(data._quadruped->_robotType == RobotType::MINI_CHEETAH){
-    _body_height = 0.29;
-  }else if(data._quadruped->_robotType == RobotType::CHEETAH_3){
+  if(data._quadruped->_robotType == RobotType::IUST) {
     _body_height = 0.45;
-  }else{
+  } else if(data._quadruped->_robotType == RobotType::MINI_CHEETAH) {
+    _body_height = 0.29;
+  } else if(data._quadruped->_robotType == RobotType::CHEETAH_3) {
+    _body_height = 0.45;
+  } else{
     assert(false);
   }
 
@@ -121,7 +130,12 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
   {
     stand_traj[0] = seResult.position[0];
     stand_traj[1] = seResult.position[1];
-    stand_traj[2] = 0.21;
+
+    if(data._quadruped->_robotType == RobotType::IUST) {
+        stand_traj[2] = 0.40;
+    }else if(data._quadruped->_robotType == RobotType::MINI_CHEETAH){
+        stand_traj[2] = 0.21;}
+
     stand_traj[3] = 0;
     stand_traj[4] = 0;
     stand_traj[5] = seResult.rpy[2];
@@ -175,7 +189,13 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
   }
 
   if(_body_height < 0.02) {
-    _body_height = 0.29;
+    if (data._quadruped->_robotType == RobotType::IUST) {
+          _body_height = 0.45;
+      } else if (data._quadruped->_robotType == RobotType::MINI_CHEETAH) {
+          _body_height = 0.29;
+      } else if (data._quadruped->_robotType == RobotType::CHEETAH_3) {
+          _body_height = 0.45;
+      }
   }
 
   // integrate position setpoint
@@ -603,8 +623,15 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
 
   Timer t1;
   dtMPC = dt * iterationsBetweenMPC;
-  setup_problem(dtMPC,horizonLength,0.4,120);
-  //setup_problem(dtMPC,horizonLength,0.4,650); //DH
+
+  if (data._quadruped->_robotType == RobotType::IUST) {
+        setup_problem(dtMPC,horizonLength,0.4,300);
+    } else if (data._quadruped->_robotType == RobotType::MINI_CHEETAH) {
+        setup_problem(dtMPC,horizonLength,0.4,120);
+    } else if (data._quadruped->_robotType == RobotType::CHEETAH_3) {
+        setup_problem(dtMPC,horizonLength,0.4,650); //DH
+    }
+
   update_x_drag(x_comp_integral);
   if(vxy[0] > 0.3 || vxy[0] < -0.3) {
     //x_comp_integral += _parameters->cmpc_x_drag * pxy_err[0] * dtMPC / vxy[0];
