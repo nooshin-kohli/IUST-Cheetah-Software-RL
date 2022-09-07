@@ -113,7 +113,13 @@ void RobotRunner::run() {
       _robot_ctrl->Estop();
     }else {
       // Controller
-      if (!_jpos_initializer->IsInitialized(_legController)) {
+
+      /*
+       * MiLab Team: This configuration allows robot to stand from lying pose
+       * directly, so that robot won't move its legs when set use_rc = 0
+       */
+//      if (!_jpos_initializer->IsInitialized(_legController))
+        if (0) {
         Mat3<float> kpMat;
         Mat3<float> kdMat;
         // Update the jpos feedback gains
