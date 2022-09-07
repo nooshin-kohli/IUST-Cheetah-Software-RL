@@ -28,9 +28,9 @@ Quadruped<T> buildIUST()
     iust._bodyMass = 3.3;
 
     //Dimentions
-    iust._bodyLength = 0.19 * 2;
-    iust._bodyWidth = 0.049 * 2;
-    iust._bodyHeight = 0.05 * 2;
+    iust._bodyLength = 0.269;
+    iust._bodyWidth = 0.100;
+    iust._bodyHeight = 0.096;
 
     //Gear ratios
     iust._abadGearRatio = 6;
@@ -38,11 +38,11 @@ Quadruped<T> buildIUST()
     iust._kneeGearRatio = 9.33;
 
     //Link lengths
-    iust._abadLinkLength = 0.062;
-    iust._hipLinkLength = 0.209;
-    iust._kneeLinkY_offset = 0.004;
-    iust._kneeLinkLength = 0.195;
-    iust._maxLegLength = 0.409;
+    iust._abadLinkLength = 0.052;
+    iust._hipLinkLength = 0.213;
+    iust._kneeLinkY_offset = 0.018;
+    iust._kneeLinkLength = 0.240;
+    iust._maxLegLength = 0.453;
 
     //Motor properties
     iust._motorTauMax = 3.f;
