@@ -106,10 +106,10 @@ Quadruped<T> buildIUST()
     iust._bodyInertia = bodyInertia;
 
     //Locations
-    iust._abadRotorLocation = Vec3<T>(0.125, 0.049, 0);
+    iust._abadRotorLocation = Vec3<T>(iust._bodyLength, iust._bodyWidth, 0) * 0.5;
     iust._abadLocation = Vec3<T>(iust._bodyLength, iust._bodyWidth, 0) * 0.5;
     iust._hipLocation = Vec3<T>(0, iust._abadLinkLength, 0);
-    iust._hipRotorLocation = Vec3<T>(0, 0.04, 0);
+    iust._hipRotorLocation = Vec3<T>(0, 0.052, 0);
     iust._kneeLocation = Vec3<T>(0, 0, -iust._hipLinkLength);
     iust._kneeRotorLocation = Vec3<T>(0, 0, 0);
 
