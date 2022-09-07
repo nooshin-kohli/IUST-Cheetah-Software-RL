@@ -20,3 +20,5 @@ TODO:
 
 	- Modify knee barrier degree @user/MIT_Controller/Controllers/WBC_Ctrl/WBC_Ctrl.cpp -> 134,135,137
 
+	- Modify the ground contact points of IUST robot @common/src/Dynamics/Quadruped.cpp -> 80-100
+
