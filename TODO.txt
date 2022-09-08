@@ -28,3 +28,5 @@ TODO:
 
 	- Modify initial posture of IUST robot (lies on the ground ) @sim.src/Simulation.cpp -> 109-124
 
+	- Modify recovery stand up for IUST robot @user/MIT_Controller/FSM_States/FSM_RecoveryStandUp.cpp -> 33-45
+
