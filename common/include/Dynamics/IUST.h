@@ -40,7 +40,7 @@ Quadruped<T> buildIUST()
     //Link lengths
     iust._abadLinkLength = 0.052;
     iust._hipLinkLength = 0.213;
-    iust._kneeLinkY_offset = 0.018;
+    iust._kneeLinkY_offset = 0.00;
     iust._kneeLinkLength = 0.240;
     iust._maxLegLength = 0.453;
 
@@ -109,7 +109,7 @@ Quadruped<T> buildIUST()
     iust._abadRotorLocation = Vec3<T>(iust._bodyLength, iust._bodyWidth, 0) * 0.5;
     iust._abadLocation = Vec3<T>(iust._bodyLength, iust._bodyWidth, 0) * 0.5;
     iust._hipLocation = Vec3<T>(0, iust._abadLinkLength, 0);
-    iust._hipRotorLocation = Vec3<T>(0, 0.052, 0);
+    iust._hipRotorLocation = Vec3<T>(0, iust._abadLinkLength - 0.03, 0);
     iust._kneeLocation = Vec3<T>(0, 0, -iust._hipLinkLength);
     iust._kneeRotorLocation = Vec3<T>(0, 0, 0);
 
