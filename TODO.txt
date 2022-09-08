@@ -26,3 +26,5 @@ TODO:
 
 	- Modify go home angle for IUST robot @sim/src/SimControlPanel.cpp -> 858
 
+	- Modify initial posture of IUST robot (lies on the ground ) @sim.src/Simulation.cpp -> 109-124
+

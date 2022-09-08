@@ -104,65 +104,45 @@ Simulation::Simulation(RobotType robot, Graphics3D* window,
   x0.q = zero12;
   x0.qd = zero12;
 
-  // Mini Cheetah Initial Posture
-  // x0.bodyPosition[2] = -0.49;
-  // Cheetah 3
-  // x0.bodyPosition[2] = -0.34;
-  // x0.q[0] = -0.807;
-  // x0.q[1] = -1.2;
-  // x0.q[2] = 2.4;
+  // Initial (lies on the ground )
+  if (_robot == RobotType::IUST) {
+    x0.bodyPosition[2] = 0.0752;
+    x0.q[0] = -0.5;
+    x0.q[1] = 1.25;
+    x0.q[2] = -2.8;
 
-  // x0.q[3] = 0.807;
-  // x0.q[4] = -1.2;
-  // x0.q[5] = 2.4;
+    x0.q[3] = 0.5;
+    x0.q[4] = 1.25;
+    x0.q[5] = -2.8;
 
-  // x0.q[6] = -0.807;
-  // x0.q[7] = -1.2;
-  // x0.q[8] = 2.4;
+    x0.q[6] = -0.5;
+    x0.q[7] = 1.25;
+    x0.q[8] = -2.8;
 
-  // x0.q[9] = 0.807;
-  // x0.q[10] = -1.2;
-  // x0.q[11] = 2.4;
+    x0.q[9] = 0.5;
+    x0.q[10] = 1.25;
+    x0.q[11] = -2.8;
+  } else {  //  MiNI CHEETAH & CHEETAH 3
+    x0.bodyPosition[2] = 0.05;
+    x0.q[0] = -0.7;
+    x0.q[1] = -1.;
+    x0.q[2] = 2.715;
 
-  // Initial (Mini Cheetah stand)
-  // x0.bodyPosition[2] = -0.185;
-  // Cheetah 3
-  // x0.bodyPosition[2] = -0.075;
+    x0.q[3] = 0.7;
+    x0.q[4] = -1.;
+    x0.q[5] = 2.715;
 
-  // x0.q[0] = -0.03;
-  // x0.q[1] = -0.79;
-  // x0.q[2] = 1.715;
+    x0.q[6] = -0.7;
+    x0.q[7] = -1.0;
+    x0.q[8] = 2.715;
 
-  // x0.q[3] = 0.03;
-  // x0.q[4] = -0.79;
-  // x0.q[5] = 1.715;
-
-  // x0.q[6] = -0.03;
-  // x0.q[7] = -0.72;
-  // x0.q[8] = 1.715;
-
-  // x0.q[9] = 0.03;
-  // x0.q[10] = -0.72;
-  // x0.q[11] = 1.715;
-
-  // Cheetah lies on the ground
-  //x0.bodyPosition[2] = -0.45;
-  x0.bodyPosition[2] = 0.05;
-  x0.q[0] = -0.7;
-  x0.q[1] = 1.;
-  x0.q[2] = 2.715;
-
-  x0.q[3] = 0.7;
-  x0.q[4] = 1.;
-  x0.q[5] = 2.715;
-
-  x0.q[6] = -0.7;
-  x0.q[7] = -1.0;
-  x0.q[8] = -2.715;
-
-  x0.q[9] = 0.7;
-  x0.q[10] = -1.0;
-  x0.q[11] = -2.715;
+    x0.q[9] = 0.7;
+    x0.q[10] = -1.0;
+    x0.q[11] = 2.715;
+    if (_robot==RobotType::CHEETAH_3) {
+      x0.bodyPosition[2] = 0.075;
+    }
+  }
 
 
   setRobotState(x0);
