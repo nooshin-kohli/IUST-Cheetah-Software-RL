@@ -77,7 +77,7 @@ bool Quadruped<T>::buildModel(FloatingBaseModel<T>& model) {
           }
 
           // add knee ground contact point
-          model.addGroundContactPoint(bodyID, Vec3<T>(0.01, 0., -_hipLinkLength - 0.025));
+          model.addGroundContactPoint(bodyID, Vec3<T>(0.02, 0., -_hipLinkLength - 0.015));
 
           // Knee Joint
           bodyID++;
@@ -89,13 +89,13 @@ bool Quadruped<T>::buildModel(FloatingBaseModel<T>& model) {
                             _kneeGearRatio, bodyID - 1, JointType::Revolute,
                             CoordinateAxis::Y, xtreeKnee, xtreeKneeRotor);
 
-              model.addGroundContactPoint(bodyID, Vec3<T>(0, _kneeLinkY_offset, -_kneeLinkLength), true);
+              model.addGroundContactPoint(bodyID, Vec3<T>(-0.02, _kneeLinkY_offset, -_kneeLinkLength - 0.025), true);
           } else {
               model.addBody(_kneeInertia, _kneeRotorInertia, _kneeGearRatio, bodyID - 1,
                             JointType::Revolute, CoordinateAxis::Y, xtreeKnee,
                             xtreeKneeRotor);
 
-              model.addGroundContactPoint(bodyID, Vec3<T>(-0.02, -_kneeLinkY_offset, -_kneeLinkLength - 0.03), true);
+              model.addGroundContactPoint(bodyID, Vec3<T>(-0.02, -_kneeLinkY_offset, -_kneeLinkLength - 0.025), true);
           }
       } else{  //MINI CHEETAH & CHEETAH 3
           // Hip Joint

@@ -22,3 +22,5 @@ TODO:
 
 	- Modify the ground contact points of IUST robot @common/src/Dynamics/Quadruped.cpp -> 80-100
 
+	- Modify robot contact points @common/src/Dynamics/Quadruped.cpp -> 80,92,98
+
