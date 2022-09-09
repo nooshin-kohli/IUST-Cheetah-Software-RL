@@ -10,6 +10,9 @@ myValue       : 1010
 stand_kd_cartesian : [2.5, 2.5, 2.5]
 stand_kp_cartesian : [50, 50, 50]
 
+recovery_kp : [80, 80, 80]
+recovery_kd : [1, 1, 1]
+
 testValue    : 111
 cheater_mode : 1 #(or 0)
 
