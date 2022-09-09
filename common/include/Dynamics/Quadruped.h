@@ -63,7 +63,8 @@ class Quadruped {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   RobotType _robotType;
-  T _bodyLength, _bodyWidth, _bodyHeight, _bodyMass;
+  T _bodyLength, _bodyWidth, _bodyHeight;
+  T _bodyMass, _abadMass, _hipMass, _kneeMass, _rotorMass;
   T _abadGearRatio, _hipGearRatio, _kneeGearRatio;
   T _abadLinkLength, _hipLinkLength, _kneeLinkLength, _kneeLinkY_offset, _maxLegLength;
   T _motorKT, _motorR, _batteryV;
