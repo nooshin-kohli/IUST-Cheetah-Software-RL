@@ -24,10 +24,14 @@ Quadruped<T> buildIUST()
     Quadruped<T> iust;
     iust._robotType = RobotType::IUST;
 
-    //Mass
-    iust._bodyMass = 3.3;
+    //Mass(kg)
+    iust._bodyMass = 16;
+    iust._abadMass = 0.861;
+    iust._hipMass = 1.598;
+    iust._kneeMass = 0.304;
+    iust._rotorMass = 0.084;
 
-    //Dimentions
+    //Dimentions(m)
     iust._bodyLength = 0.269;
     iust._bodyWidth = 0.100;
     iust._bodyHeight = 0.096;
@@ -37,12 +41,13 @@ Quadruped<T> buildIUST()
     iust._hipGearRatio = 6;
     iust._kneeGearRatio = 9.33;
 
-    //Link lengths
-    iust._abadLinkLength = 0.052;
+    //Link lengths(m)
+    iust._abadLinkLength = 0.0576;
     iust._hipLinkLength = 0.213;
-    iust._kneeLinkY_offset = 0.00;
+    iust._kneeLinkY_offset = 0.07125;
     iust._kneeLinkLength = 0.240;
     iust._maxLegLength = 0.453;
+    iust._hipRotorLocationYOffset = 0.0527;
 
     //Motor properties
     iust._motorTauMax = 3.f;
@@ -67,14 +72,14 @@ Quadruped<T> buildIUST()
     abadRotationalInertia << 381, 58, 0.45, 58, 560, 0.95, 0.45, 0.95, 444;
     abadRotationalInertia = abadRotationalInertia * 1e-6;
     Vec3<T> abadCOM(0, 0.036, 0);  // LEFT
-    SpatialInertia<T> abadInertia(0.54, abadCOM, abadRotationalInertia);
+    SpatialInertia<T> abadInertia(iust._abadMass, abadCOM, abadRotationalInertia);
 
     //Spatial inertia for hip
     Mat3<T> hipRotationalInertia;
     hipRotationalInertia << 1983, 245, 13, 245, 2103, 1.5, 13, 1.5, 408;
     hipRotationalInertia = hipRotationalInertia * 1e-6;
     Vec3<T> hipCOM(0, 0.016, -0.02);
-    SpatialInertia<T> hipInertia(0.634, hipCOM, hipRotationalInertia);
+    SpatialInertia<T> hipInertia(iust._hipMass, hipCOM, hipRotationalInertia);
 
     //Spatial inertia for knee
     Mat3<T> kneeRotationalInertia, kneeRotationalInertiaRotated;
@@ -82,12 +87,12 @@ Quadruped<T> buildIUST()
     kneeRotationalInertiaRotated = kneeRotationalInertiaRotated * 1e-6;
     kneeRotationalInertia = RY * kneeRotationalInertiaRotated * RY.transpose();
     Vec3<T> kneeCOM(0, 0, -0.061);
-    SpatialInertia<T> kneeInertia(0.064, kneeCOM, kneeRotationalInertia);
+    SpatialInertia<T> kneeInertia(iust._kneeMass, kneeCOM, kneeRotationalInertia);
 
     //Rotor inertia (x-axis and y-axis)
     Vec3<T> rotorCOM(0, 0, 0);
-    SpatialInertia<T> rotorInertiaX(0.055, rotorCOM, rotorRotationalInertiaX);
-    SpatialInertia<T> rotorInertiaY(0.055, rotorCOM, rotorRotationalInertiaY);
+    SpatialInertia<T> rotorInertiaX(iust._rotorMass, rotorCOM, rotorRotationalInertiaX);
+    SpatialInertia<T> rotorInertiaY(iust._rotorMass, rotorCOM, rotorRotationalInertiaY);
 
     //Body inertia
     Mat3<T> bodyRotationalInertia;
@@ -109,7 +114,7 @@ Quadruped<T> buildIUST()
     iust._abadRotorLocation = Vec3<T>(iust._bodyLength, iust._bodyWidth, 0) * 0.5;
     iust._abadLocation = Vec3<T>(iust._bodyLength, iust._bodyWidth, 0) * 0.5;
     iust._hipLocation = Vec3<T>(0, iust._abadLinkLength, 0);
-    iust._hipRotorLocation = Vec3<T>(0, iust._abadLinkLength - 0.03, 0);
+    iust._hipRotorLocation = Vec3<T>(0, iust._abadLinkLength - iust._hipRotorLocationYOffset, 0);
     iust._kneeLocation = Vec3<T>(0, 0, -iust._hipLinkLength);
     iust._kneeRotorLocation = Vec3<T>(0, 0, 0);
 
