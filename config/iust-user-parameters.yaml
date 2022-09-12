@@ -24,7 +24,7 @@ Kd_foot           : [10, 10, 10]
 Kp_ori            : [100, 100, 100]
 Kd_ori            : [10, 10, 10]
 
-cmpc_gait         : 9
+cmpc_gait         : 4
 cmpc_x_drag       : 3
 cmpc_use_sparse   : 0
 cmpc_bonus_swing  : 0
@@ -34,7 +34,7 @@ jcqp_rho          : 1e-07
 jcqp_sigma        : 1e-08
 jcqp_terminate    : 0.1
 use_jcqp          : 0
-use_wbc           : 1
+use_wbc           : 0
 
 # Swing leg parameters
 Swing_Kp_cartesian : [350, 350, 75]
