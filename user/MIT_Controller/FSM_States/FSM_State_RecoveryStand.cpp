@@ -116,16 +116,30 @@ bool FSM_State_RecoveryStand<T>::_UpsideDown(){
 template <typename T>
 void FSM_State_RecoveryStand<T>::run() {
 
-  switch(_flag){
-    case StandUp:
-      _StandUp(_state_iter - _motion_start_iter);
-      break;
-    case FoldLegs:
-      _FoldLegs(_state_iter - _motion_start_iter);
-      break;
-    case RollOver:
-      _RollOver(_state_iter - _motion_start_iter);
-      break;
+  if (this->_data->_quadruped->_robotType == RobotType::IUST) {
+    switch(_flag){
+      case StandUp:
+        _IUSTStandUp(_state_iter - _motion_start_iter);
+        break;
+      case FoldLegs:
+        _IUSTFoldLegs(_state_iter - _motion_start_iter);
+        break;
+      case RollOver:
+        _IUSTRollOver(_state_iter - _motion_start_iter);
+        break;
+    }
+  } else {
+    switch(_flag){
+      case StandUp:
+        _IUSTStandUp(_state_iter - _motion_start_iter);
+        break;
+      case FoldLegs:
+        _IUSTFoldLegs(_state_iter - _motion_start_iter);
+        break;
+      case RollOver:
+        _IUSTRollOver(_state_iter - _motion_start_iter);
+        break;
+    }
   }
 
  ++_state_iter;
@@ -161,6 +175,75 @@ void FSM_State_RecoveryStand<T>::_SetJPosInterPts(
         //_flag, curr_iter, _state_iter, _motion_start_iter); 
       //printf("inter pos: %f, %f, %f\n", inter_pos[0], inter_pos[1], inter_pos[2]);
     //}
+}
+template <typename T>
+void FSM_State_RecoveryStand<T>::_IUSTRollOver(const int & curr_iter) {
+
+    for(size_t i(0); i<4; ++i) {
+        _SetJPosInterPts(curr_iter, iust_rollover_ramp_iter, i,
+                         initial_jpos[i], rolling_jpos[i]);
+    }
+
+    if(curr_iter > iust_rollover_ramp_iter + iust_rollover_settle_iter) {
+        _flag = FoldLegs;
+        for(size_t i(0); i<4; ++i) initial_jpos[i] = rolling_jpos[i];
+        _motion_start_iter = _state_iter+1;
+    }
+}
+
+template <typename T>
+void FSM_State_RecoveryStand<T>::_IUSTStandUp(const int & curr_iter) {
+    T body_height = this->_data->_stateEstimator->getResult().position[2];
+    bool something_wrong(false);
+
+    if( _UpsideDown() || (body_height < 0.30 ) ) {
+        something_wrong = true;
+    }
+
+    if( (curr_iter > floor(iust_standup_ramp_iter*0.7) ) && something_wrong) {
+        // If body height is too low because of some reason
+        // even after the stand up motion is almost over
+        // (Can happen when E-Stop is engaged in the middle of Other state)
+        for(size_t i(0); i < 4; ++i) {
+            initial_jpos[i] = this->_data->_legController->datas[i].q;
+        }
+        _flag = FoldLegs;
+        _motion_start_iter = _state_iter+1;
+
+        printf("[Recovery Balance - Warning] body height is still too low (%f) or UpsideDown (%d); Folding legs \n",
+               body_height, _UpsideDown() );
+
+    } else {
+        for(size_t leg(0); leg<4; ++leg) {
+                _SetJPosInterPts(curr_iter, iust_standup_ramp_iter,
+                                 leg, initial_jpos[leg], stand_jpos[leg]);
+        }
+    }
+  // feed forward mass of robot.
+  //for(int i = 0; i < 4; i++)
+  //this->_data->_legController->commands[i].forceFeedForward = f_ff;
+  //Vec4<T> se_contactState(0.,0.,0.,0.);
+  Vec4<T> se_contactState(0.5,0.5,0.5,0.5);
+  this->_data->_stateEstimator->setContactPhase(se_contactState);
+}
+
+template <typename T>
+void FSM_State_RecoveryStand<T>::_IUSTFoldLegs(const int & curr_iter) {
+
+    for(size_t i(0); i<4; ++i){
+        _SetJPosInterPts(curr_iter, iust_fold_ramp_iter, i,
+                         initial_jpos[i], fold_jpos[i]);
+    }
+    if(curr_iter >= iust_fold_ramp_iter + iust_fold_settle_iter) {
+        if(_UpsideDown()) {
+            _flag = RollOver;
+            for(size_t i(0); i<4; ++i) initial_jpos[i] = fold_jpos[i];
+        } else {
+            _flag = StandUp;
+            for(size_t i(0); i<4; ++i) initial_jpos[i] = fold_jpos[i];
+        }
+        _motion_start_iter = _state_iter + 1;
+    }
 }
 
 template <typename T>
