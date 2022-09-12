@@ -99,8 +99,9 @@ Quadruped<T> buildIUST()
     bodyRotationalInertia << 11253, 0, 0, 0, 36203, 0, 0, 0, 42673;
     bodyRotationalInertia = bodyRotationalInertia * 1e-6;
     Vec3<T> bodyCOM(0, 0, 0);
-    SpatialInertia<T> bodyInertia(iust._bodyMass, bodyCOM, bodyRotationalInertia);
-
+    Vec3<T> bodyDims(iust._bodyLength, iust._bodyWidth, iust._bodyHeight);
+    SpatialInertia<T> bodyInertia(iust._bodyMass, bodyCOM, rotInertiaOfBox(iust._bodyMass, bodyDims));
+    
     //Adjust IUST inertias
     iust._abadInertia = abadInertia;
     iust._hipInertia = hipInertia;
