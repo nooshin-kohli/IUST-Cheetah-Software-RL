@@ -16,7 +16,7 @@
 // Controller
 ////////////////////
 
-ConvexMPCLocomotion::ConvexMPCLocomotion(float _dt, int _iterations_between_mpc, MIT_UserParameters* parameters, float fmax) :
+ConvexMPCLocomotion::ConvexMPCLocomotion(float _dt, int _iterations_between_mpc, MIT_UserParameters* parameters, float fmax, RobotType &robotType) :
   iterationsBetweenMPC(_iterations_between_mpc),
   horizonLength(10),
   dt(_dt),
@@ -53,8 +53,11 @@ ConvexMPCLocomotion::ConvexMPCLocomotion(float _dt, int _iterations_between_mpc,
   for(int i = 0; i < 4; i++)
     firstSwing[i] = true;
 
-  initSparseMPC();
-
+  if (robotType == RobotType::IUST) {
+      initIUSTSparseMPC();
+    } else {
+      initSparseMPC();
+    }
    pBody_des.setZero();
    vBody_des.setZero();
    aBody_des.setZero();
@@ -157,29 +160,32 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
   current_gait = gaitNumber;
 
   gait->setIterations(iterationsBetweenMPC, iterationCounter);
-  jumping.setIterations(iterationsBetweenMPC, iterationCounter);
 
+  /*
+   * JUMPING IS NOT CONSIDERED NOW
+   */
+  //jumping.setIterations(iterationsBetweenMPC, iterationCounter);
 
-  jumping.setIterations(27/2, iterationCounter);
+  //jumping.setIterations(27/2, iterationCounter);
 
   //printf("[%d] [%d]\n", jumping.get_current_gait_phase(), gait->get_current_gait_phase());
   // check jump trigger
-  jump_state.trigger_pressed(jump_state.should_jump(jumping.getCurrentGaitPhase()),
-      data._desiredStateCommand->trigger_pressed);
+  //jump_state.trigger_pressed(jump_state.should_jump(jumping.getCurrentGaitPhase()),
+  //    data._desiredStateCommand->trigger_pressed);
 
 
   // bool too_high = seResult.position[2] > 0.29;
   // check jump action
-  if(jump_state.should_jump(jumping.getCurrentGaitPhase())) {
-    gait = &jumping;
-    recompute_timing(27/2);
-    _body_height = _body_height_jumping;
-    currently_jumping = true;
+  //if(jump_state.should_jump(jumping.getCurrentGaitPhase())) {
+  //  gait = &jumping;
+  //  recompute_timing(27/2);
+  //  _body_height = _body_height_jumping;
+  //  currently_jumping = true;
 
-  } else {
-    recompute_timing(default_iterations_between_mpc);
-    currently_jumping = false;
-  }
+  //} else {
+  //  recompute_timing(default_iterations_between_mpc);
+  //  currently_jumping = false;
+  //}
 
   if(_body_height < 0.02) {
     if (data._quadruped->_robotType == RobotType::IUST) {
@@ -264,8 +270,15 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
     //if(firstSwing[i]) {
     //footSwingTrajectories[i].setHeight(.05);
     footSwingTrajectories[i].setHeight(.06);
-    Vec3<float> offset(0, side_sign[i] * .065, 0);
+   
+    Vec3<float> offset;
+    if (data._quadruped->_robotType == RobotType::IUST){
+      offset << 0, side_sign[i] * 0.125, 0;
+    } else{
+      offset << 0, side_sign[i] * .065, 0;
+    }
 
+    //get real hip location from com
     Vec3<float> pRobotFrame = (data._quadruped->getHipLocation(i) + offset);
 
     pRobotFrame[1] += interleave_y[i] * v_abs * interleave_gain;
@@ -301,7 +314,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
     Pf[0] +=  pfx_rel;
     Pf[1] +=  pfy_rel;
     Pf[2] = -0.003;
-    //Pf[2] = 0.0;
+    //Pf[2] = -0.005;
     footSwingTrajectories[i].setFinalPosition(Pf);
 
   }
@@ -309,16 +322,18 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
   // calc gait
   iterationCounter++;
 
+  Kp_swing = data.userParameters->Swing_Kp_cartesian;
+  Kd_swing = data.userParameters->Swing_Kd_cartesian;
   // load LCM leg swing gains
-  Kp << 700, 0, 0,
-     0, 700, 0,
-     0, 0, 150;
+  Kp << Kp_swing[0], 0, 0,
+     0, Kp_swing[1], 0,
+     0, 0, Kp_swing[2];
   Kp_stance = 0*Kp;
 
 
-  Kd << 7, 0, 0,
-     0, 7, 0,
-     0, 0, 7;
+  Kd << Kd_swing[0], 0, 0,
+     0, Kd_swing[1], 0,
+     0, 0, Kd_swing[2];
   Kd_stance = Kd;
   // gait
   Vec4<float> contactStates = gait->getContactState();
@@ -397,6 +412,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
       Vec3<float> pDesLeg = seResult.rBody * (pDesFootWorld - seResult.position) 
         - data._quadruped->getHipLocation(foot);
       Vec3<float> vDesLeg = seResult.rBody * (vDesFootWorld - seResult.vWorld);
+      std::cout<<foot<<" "<<pDesLeg<<"\n";
 
       // Update for WBC
       pFoot_des[foot] = pDesFootWorld;
@@ -432,10 +448,12 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
         data._legController->commands[foot].pDes = pDesLeg;
         data._legController->commands[foot].vDes = vDesLeg;
         data._legController->commands[foot].kpCartesian = Kp_stance;
-        data._legController->commands[foot].kdCartesian = Kd_stance;
+        data._legController->commands[foot].kdCartesian = 0 * Kd_stance;
 
         data._legController->commands[foot].forceFeedForward = f_ff[foot];
-        data._legController->commands[foot].kdJoint = Mat3<float>::Identity() * 0.2;
+        data._legController->commands[foot].kdJoint = Mat3<float>::Identity() * data.userParameters->Swing_Kd_joint[0];
+        data._legController->commands[foot].kpJoint = Mat3<float>::Identity() * data.userParameters->Swing_Kp_joint[0];
+
 
         //      footSwingTrajectories[foot]->updateFF(hw_i->leg_controller->leg_datas[foot].q,
         //                                          hw_i->leg_controller->leg_datas[foot].qd, 0); todo removed
@@ -443,7 +461,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
       }else{ // Stance foot damping
         data._legController->commands[foot].pDes = pDesLeg;
         data._legController->commands[foot].vDes = vDesLeg;
-        data._legController->commands[foot].kpCartesian = 0.*Kp_stance;
+        data._legController->commands[foot].kpCartesian = 0. * Kp_stance;
         data._legController->commands[foot].kdCartesian = Kd_stance;
       }
       //            cout << "Foot " << foot << " force: " << f_ff[foot].transpose() << "\n";
@@ -492,6 +510,10 @@ void ConvexMPCLocomotion::run(ControlFSMData<double>& data) {
 
 void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData<float> &data, bool omniMode) {
   //iterationsBetweenMPC = 30;
+  if (data._quadruped->_robotType == RobotType::IUST){
+    _body_height = 0.45;
+  }
+
   if((iterationCounter % iterationsBetweenMPC) == 0)
   {
     auto seResult = data._stateEstimator->getResult();
@@ -585,12 +607,12 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
 
   //float Q[12] = {0.25, 0.25, 10, 2, 2, 20, 0, 0, 0.3, 0.2, 0.2, 0.2};
 
-  float Q[12] = {0.25, 0.25, 10, 2, 2, 50, 0, 0, 0.3, 0.2, 0.2, 0.1};
+  float Q[12] = {0.25, 0.25, 10, 2, 2, 100, 0, 0, 0.6, 0.2, 0.2, 0.1};
 
   //float Q[12] = {0.25, 0.25, 10, 2, 2, 40, 0, 0, 0.3, 0.2, 0.2, 0.2};
   float yaw = seResult.rpy[2];
   float* weights = Q;
-  float alpha = 4e-5; // make setting eventually
+  float alpha = 1e-6; // make setting eventually
   //float alpha = 4e-7; // make setting eventually: DH
   float* p = seResult.position.data();
   float* v = seResult.vWorld.data();
@@ -605,7 +627,7 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
 
   if(alpha > 1e-4) {
     std::cout << "Alpha was set too high (" << alpha << ") adjust to 1e-5\n";
-    alpha = 1e-5;
+    alpha = 1e-7;
   }
 
   Vec3<float> pxy_act(p[0], p[1], 0);
@@ -618,7 +640,7 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
   dtMPC = dt * iterationsBetweenMPC;
 
   if (data._quadruped->_robotType == RobotType::IUST) {
-        setup_problem(dtMPC,horizonLength,0.4,300);
+        setup_problem(dtMPC,horizonLength,0.4,150);
     } else if (data._quadruped->_robotType == RobotType::MINI_CHEETAH) {
         setup_problem(dtMPC,horizonLength,0.4,120);
     } else if (data._quadruped->_robotType == RobotType::CHEETAH_3) {
@@ -638,8 +660,13 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
   //t1.stopPrint("Setup MPC");
 
   Timer t2;
+  if(data._quadruped->_robotType == RobotType::IUST) {
+    iust_flag = true;
+  } else {
+    iust_flag = false;
+  }
   //cout << "dtMPC: " << dtMPC << "\n";
-  update_problem_data_floats(p,v,q,w,r,yaw,weights,trajAll,alpha,mpcTable);
+  update_problem_data_floats(p,v,q,w,r,yaw,weights,trajAll,alpha,mpcTable,iust_flag);
   //t2.stopPrint("Run MPC");
   //printf("MPC Solve time %f ms\n", t2.getMs());
 
@@ -651,11 +678,19 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
 
     //printf("[%d] %7.3f %7.3f %7.3f\n", leg, f[0], f[1], f[2]);
 
-    f_ff[leg] = -seResult.rBody * f;
+    if(data._quadruped->_robotType == RobotType::IUST) {
+      r_z << -1, 0, 0,
+              0, 1, 0,
+              0, 0, 1;
+      f_ff[leg] = -r_z * seResult.rBody * f;
+    } else {
+      f_ff[leg] = -seResult.rBody * f;
+    }
     // Update for WBC
     Fr_des[leg] = f;
   }
 }
+
 
 void ConvexMPCLocomotion::solveSparseMPC(int *mpcTable, ControlFSMData<float> &data) {
   // X0, contact trajectory, state trajectory, feet, get result!
@@ -722,3 +757,28 @@ void ConvexMPCLocomotion::initSparseMPC() {
   _sparseTrajectory.resize(horizonLength);
 }
 
+void ConvexMPCLocomotion::initIUSTSparseMPC() {
+  Mat3<double> baseInertia;
+  baseInertia << 0.109, 0, 0,
+                 0, 0.834, 0,
+                 0, 0, 0.833;
+  double mass = 28;
+  double maxForce = 150;
+
+  std::vector<double> dtTraj;
+  for(int i = 0; i < horizonLength; i++) {
+    dtTraj.push_back(dtMPC);
+  }
+
+  Vec12<double> weights;
+  weights << 0.25, 0.25, 10, 2, 2, 60, 0, 0, 0.3, 0.2, 0.2, 0.2;
+  //weights << 0,0,0,1,1,10,0,0,0,0.2,0.2,0;
+
+  _sparseCMPC.setRobotParameters(baseInertia, mass, maxForce);
+  _sparseCMPC.setFriction(0.4);
+  _sparseCMPC.setWeights(weights, 1e-7);
+  _sparseCMPC.setDtTrajectory(dtTraj);
+
+  _sparseTrajectory.resize(horizonLength);
+
+}
