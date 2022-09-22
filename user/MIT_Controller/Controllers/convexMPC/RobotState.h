@@ -19,6 +19,7 @@ class RobotState
         Matrix<fpt,3,3> R;
         Matrix<fpt,3,3> R_yaw;
         Matrix<fpt,3,3> I_body;
+        Matrix<fpt,3,3> I_body_mini, I_body_iust;
         Quaternionf q;
         fpt yaw;
         fpt m = 9;

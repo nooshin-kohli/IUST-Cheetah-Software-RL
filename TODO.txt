@@ -31,5 +31,7 @@ TODO:
 	- Modify recovery stand up for IUST robot @user/MIT_Controller/FSM_States/FSM_RecoveryStandUp.cpp -> 33-45
 
 	- Add IUST robot mass @common/include/Dynamics/IUST.h
+
+	- Modify Id_iust @user/MIT_Controller/Controllers/ConvexMPC/RobotState.cpp -> 40
 	
 
