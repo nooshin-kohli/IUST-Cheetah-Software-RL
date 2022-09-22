@@ -24,24 +24,20 @@ FSM_State_Locomotion<T>::FSM_State_Locomotion(ControlFSMData<T>* _controlFSMData
   if (_controlFSMData->_quadruped->_robotType == RobotType::IUST) {
     fmax = 300;
     cMPCOld = new ConvexMPCLocomotion(_controlFSMData->controlParameters->controller_dt,
-        //30 / (1000. * _controlFSMData->controlParameters->controller_dt),
-        //22 / (1000. * _controlFSMData->controlParameters->controller_dt),
         30 / (1000. * _controlFSMData->controlParameters->controller_dt),
-        _controlFSMData->userParameters, fmax);
+        _controlFSMData->userParameters, fmax, _controlFSMData->_quadruped->_robotType);
 
   } else if (_controlFSMData->_quadruped->_robotType == RobotType::MINI_CHEETAH) {
     fmax = 120;
     cMPCOld = new ConvexMPCLocomotion(_controlFSMData->controlParameters->controller_dt,
-        //30 / (1000. * _controlFSMData->controlParameters->controller_dt),
-        //22 / (1000. * _controlFSMData->controlParameters->controller_dt),
         27 / (1000. * _controlFSMData->controlParameters->controller_dt),
-        _controlFSMData->userParameters, fmax);
+        _controlFSMData->userParameters, fmax, _controlFSMData->_quadruped->_robotType);
 
   } else if (_controlFSMData->_quadruped->_robotType == RobotType::CHEETAH_3) {
     fmax = 650;
     cMPCOld = new ConvexMPCLocomotion(_controlFSMData->controlParameters->controller_dt,
         33 / (1000. * _controlFSMData->controlParameters->controller_dt),
-        _controlFSMData->userParameters, fmax);
+        _controlFSMData->userParameters, fmax, _controlFSMData->_quadruped->_robotType);
 
   }else{
     assert(false);

@@ -12,9 +12,9 @@ TODO:
 	- Modify robot height @user/MIT_Controller/FSM_States/FSM_State_BalanceStand.cpp -> 52,53
 	
 	- Modify safety condition of robot posture, foot position and foot feedforward force
-			@user/MIT_Controller/FSM_States/FSM_State_SafetyChecker.cpp
+			@user/MIT_Controller/FSM_States/FSM_State_SafetyChecker.cpp -> 132,133
 
-	- Modify iterations_between_mpc @user/MIT_Controller/FSM_States/FSM_State_Locomotion.cpp -> 27
+	- Modify iterations_between_mpc @user/MIT_Controller/FSM_States/FSM_State_Locomotion.cpp -> 25,27
 
 	- Modify user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 45,46,82,135,193,628
 
@@ -28,7 +28,8 @@ TODO:
 
 	- Modify initial posture of IUST robot (lies on the ground ) @sim.src/Simulation.cpp -> 109-124
 
-	- Modify recovery stand up for IUST robot @user/MIT_Controller/FSM_States/FSM_RecoveryStandUp.cpp -> 33-45
+	- Modify recovery stand up for IUST robot @user/MIT_Controller/FSM_States/FSM_RecoveryStand.cpp -> 33-45
+										and   @user/MIT_Controller/FSM_States/FSM_RecoveryStand.h -> 74-78
 
 	- Add IUST robot mass @common/include/Dynamics/IUST.h
 
