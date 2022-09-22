@@ -85,9 +85,9 @@ Quadruped<T> buildIUST()
     Mat3<T> kneeRotationalInertia, kneeRotationalInertiaRotated;
     kneeRotationalInertiaRotated << 6, 0, 0, 0, 248, 0, 0, 0, 245;
     kneeRotationalInertiaRotated = kneeRotationalInertiaRotated * 1e-6;
-    kneeRotationalInertia = RY * kneeRotationalInertiaRotated * RY.transpose();
+    //kneeRotationalInertia = RY * kneeRotationalInertiaRotated * RY.transpose();
     Vec3<T> kneeCOM(0, 0, -0.061);
-    SpatialInertia<T> kneeInertia(iust._kneeMass, kneeCOM, kneeRotationalInertia);
+    SpatialInertia<T> kneeInertia(iust._kneeMass, kneeCOM, kneeRotationalInertiaRotated);
 
     //Rotor inertia (x-axis and y-axis)
     Vec3<T> rotorCOM(0, 0, 0);
