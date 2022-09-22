@@ -22,7 +22,9 @@ class RobotState
         Matrix<fpt,3,3> I_body_mini, I_body_iust;
         Quaternionf q;
         fpt yaw;
-        fpt m = 9;
+        fpt m_mini = 9;
+        fpt m_iust = 28;
+        fpt m;
         //fpt m = 50.236; //DH
     //private:
 };
