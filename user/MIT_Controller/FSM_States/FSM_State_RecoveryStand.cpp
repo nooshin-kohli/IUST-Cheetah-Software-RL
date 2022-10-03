@@ -29,15 +29,15 @@ FSM_State_RecoveryStand<T>::FSM_State_RecoveryStand(ControlFSMData<T>* _controlF
   // goal configuration
 
   if (this->_data->_quadruped->_robotType == RobotType::IUST) {
-    // Folding
-    fold_jpos[0] << -0.0f, 1.5f, -2.6f;
-    fold_jpos[1] << 0.0f, 1.5f, -2.6f;
-    fold_jpos[2] << -0.0f, 1.5f, -2.6f;
-    fold_jpos[3] << 0.0f, 1.5f, -2.6f;
-    // Stand Up
-    for(size_t i(0); i<4; ++i){
-      stand_jpos[i] << 0.f, .9f, -1.6f;
-    }
+      // Folding
+      fold_jpos[0] << -0.0f, -1.5f, 2.6f;
+      fold_jpos[1] << 0.0f, -1.5f, 2.6f;
+      fold_jpos[2] << -0.0f, -1.5f, 2.6f;
+      fold_jpos[3] << 0.0f, -1.5f, 2.6f;
+      // Stand Up
+      for(size_t i(0); i<4; ++i){
+        stand_jpos[i] << 0.f, -0.96f, 1.6f;
+      }
     // Rolling
     rolling_jpos[0] << 1.5f, -1.6f, 2.77f;
     rolling_jpos[1] << 1.3f, -3.1f, 2.77f;
