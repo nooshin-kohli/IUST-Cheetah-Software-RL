@@ -14,8 +14,8 @@
  */
 template <typename T>
 bool SafetyChecker<T>::checkSafeOrientation() {
-  if (abs(data->_stateEstimator->getResult().rpy(0)) >= 0.523 ||
-      abs(data->_stateEstimator->getResult().rpy(1)) >= 0.523) {
+  if (abs(data->_stateEstimator->getResult().rpy(0)) >= 0.698 ||
+      abs(data->_stateEstimator->getResult().rpy(1)) >= 0.698) {
         printf("Orientation safety check failed!\n");
     return false;
   } else {
@@ -60,7 +60,7 @@ bool SafetyChecker<T>::checkPDesFoot() {
     }
 
     // Keep the foot from going too far from the body in +y
-    if (data->_legController->commands[leg].pDes(1) > maxPDes) {
+    if (data->_legController->commands[leg].pDes(1) > maxPDes / 3) {
       std::cout << "[CONTROL FSM] Safety: PDes leg: " << leg
                 << " | coordinate: " << 1 << "\n";
       std::cout << "   commanded: "
@@ -71,7 +71,7 @@ bool SafetyChecker<T>::checkPDesFoot() {
     }
 
     // Keep the foot from going too far from the body in -y
-    if (data->_legController->commands[leg].pDes(1) < -maxPDes) {
+    if (data->_legController->commands[leg].pDes(1) < -maxPDes / 3) {
       std::cout << "[CONTROL FSM] Safety: PDes leg: " << leg
                 << " | coordinate: " << 1 << "\n";
       std::cout << "   commanded: "
@@ -89,7 +89,7 @@ bool SafetyChecker<T>::checkPDesFoot() {
                 << " | coordinate: " << 2 << "\n";
       std::cout << "   commanded: "
                 << data->_legController->commands[leg].pDes(2)
-                << " | modified: " << -data->_quadruped->_maxLegLength / 4
+                << " | modified: " << -data->_quadruped->_maxLegLength / 6
                 << std::endl;
       data->_legController->commands[leg].pDes(2) =
           -data->_quadruped->_maxLegLength / 4;
