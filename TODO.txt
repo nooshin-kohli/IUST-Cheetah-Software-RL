@@ -24,7 +24,7 @@ TODO:
 
 	- Modify robot contact points @common/src/Dynamics/Quadruped.cpp -> 80,92,98
 
-	- Modify go home angle for IUST robot @sim/src/SimControlPanel.cpp -> 858
+	- Modify go home angle for IUST robot @sim/src/SimControlPanel.cpp -> 857
 
 	- Modify initial posture of IUST robot (lies on the ground ) @sim.src/Simulation.cpp -> 109-124
 
