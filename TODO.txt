@@ -36,3 +36,5 @@ TODO:
 	- Modify Id_iust @user/MIT_Controller/Controllers/ConvexMPC/RobotState.cpp -> 40
 	
 	- Modify SpineBoard private values @common/include/SimUtilities/SpineBoard.h -> 70-77
+
+	- Modify Q_IUST and weights @user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 608, 795

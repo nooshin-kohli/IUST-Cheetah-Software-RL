@@ -19,11 +19,12 @@ class RobotState
         Matrix<fpt,3,3> R;
         Matrix<fpt,3,3> R_yaw;
         Matrix<fpt,3,3> I_body;
-        Matrix<fpt,3,3> I_body_mini, I_body_iust;
+        Matrix<fpt,3,3> I_body_mini, I_body_iust, I_body_cheetah3;
         Quaternionf q;
         fpt yaw;
         fpt m_mini = 9;
         fpt m_iust = 28;
+        fpt m_cheetah3 = 43;
         fpt m;
         //fpt m = 50.236; //DH
     //private:

@@ -120,7 +120,7 @@ private:
 
   // High speed running
   //float _body_height = 0.34;
-  float _body_height = 0.45;
+  float _body_height;
   bool iust_flag = false;
 
   float _body_height_running = 0.29;

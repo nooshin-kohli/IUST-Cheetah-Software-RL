@@ -299,6 +299,9 @@ void solve_mpc(update_data_t* update, problem_setup* setup, bool iust)
   if (iust) {
     rs.m = rs.m_iust;
     rs.I_body = rs.I_body_iust;
+  } else if (setup->f_max > 60) {
+    rs.m = rs.m_cheetah3;
+    rs.I_body = rs.I_body_cheetah3;
   } else {
     rs.m = rs.m_mini;
     rs.I_body = rs.I_body_mini;
