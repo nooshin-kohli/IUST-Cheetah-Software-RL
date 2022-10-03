@@ -68,7 +68,7 @@ void SpineBoard::resetCommand() {
 /*!
  * Run spine board control
  */
-void SpineBoard::run() {
+void SpineBoard::run(bool iust) {
   iter_counter++;
   if (cmd == nullptr || data == nullptr) {
     printf(
@@ -80,13 +80,23 @@ void SpineBoard::run() {
     return;
   }
 
+  if (iust) {
+    for (int i = 0; i < 3; ++i) {
+      max_torque[i] = iust_max_torque[i];
+      q_limit_upper[i] = iust_q_limit_upper[i];
+      q_limit_low[i] = iust_q_limit_low[i];
+      }
+    kp_softstop = iust_kp_softstop;
+    kd_softstop = iust_kd_softstop;
+  }
+
   /// Check abad softstop ///
-  if (data->q_abad[board_num] > q_limit_p[0]) {
-    torque_out[0] = kp_softstop * (q_limit_p[0] - data->q_abad[board_num]) -
+  if (data->q_abad[board_num] > q_limit_upper[0]) {
+    torque_out[0] = kp_softstop * (q_limit_upper[0] - data->q_abad[board_num]) -
                     kd_softstop * (data->qd_abad[board_num]) +
                     cmd->tau_abad_ff[board_num];
-  } else if (data->q_abad[board_num] < q_limit_n[0]) {
-    torque_out[0] = kp_softstop * (q_limit_n[0] - data->q_abad[board_num]) -
+  } else if (data->q_abad[board_num] < q_limit_low[0]) {
+    torque_out[0] = kp_softstop * (q_limit_low[0] - data->q_abad[board_num]) -
                     kd_softstop * (data->qd_abad[board_num]) +
                     cmd->tau_abad_ff[board_num];
   } else {
@@ -98,12 +108,12 @@ void SpineBoard::run() {
   }
 
   /// Check hip softstop ///
-  if (data->q_hip[board_num] > q_limit_p[1]) {
-    torque_out[1] = kp_softstop * (q_limit_p[1] - data->q_hip[board_num]) -
+  if (data->q_hip[board_num] > q_limit_upper[1]) {
+    torque_out[1] = kp_softstop * (q_limit_upper[1] - data->q_hip[board_num]) -
                     kd_softstop * (data->qd_hip[board_num]) +
                     cmd->tau_hip_ff[board_num];
-  } else if (data->q_hip[board_num] < q_limit_n[1]) {
-    torque_out[1] = kp_softstop * (q_limit_n[1] - data->q_hip[board_num]) -
+  } else if (data->q_hip[board_num] < q_limit_low[1]) {
+    torque_out[1] = kp_softstop * (q_limit_low[1] - data->q_hip[board_num]) -
                     kd_softstop * (data->qd_hip[board_num]) +
                     cmd->tau_hip_ff[board_num];
   } else {
@@ -114,12 +124,22 @@ void SpineBoard::run() {
                     cmd->tau_hip_ff[board_num];
   }
 
-  /// No knee softstop right now ///
-  torque_out[2] = cmd->kp_knee[board_num] *
-                      (cmd->q_des_knee[board_num] - data->q_knee[board_num]) +
-                  cmd->kd_knee[board_num] *
-                      (cmd->qd_des_knee[board_num] - data->qd_knee[board_num]) +
-                  cmd->tau_knee_ff[board_num];
+  // Check knee softstop
+  if (data->q_knee[board_num] > q_limit_upper[2]) {
+    torque_out[2] = kp_softstop * (q_limit_upper[2] - data->q_knee[board_num]) -
+                    kd_softstop * (data->qd_knee[board_num]) +
+                    cmd->tau_knee_ff[board_num];
+  } else if (data->q_knee[board_num] < q_limit_low[2]) {
+    torque_out[2] = kp_softstop * (q_limit_low[2] - data->q_knee[board_num]) -
+                    kd_softstop * (data->qd_knee[board_num]) +
+                    cmd->tau_knee_ff[board_num];
+  } else {
+    torque_out[2] = cmd->kp_knee[board_num] *
+                    (cmd->q_des_knee[board_num] - data->q_knee[board_num]) +
+                    cmd->kd_knee[board_num] *
+                    (cmd->qd_des_knee[board_num] - data->qd_knee[board_num]) +
+                    cmd->tau_knee_ff[board_num];
+  }
 
   const float* torque_limits = disabled_torque;
 
