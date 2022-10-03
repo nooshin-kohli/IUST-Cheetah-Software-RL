@@ -88,9 +88,9 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QRadioButton" name="MilabButton">
+           <widget class="QRadioButton" name="iustButton">
             <property name="text">
-             <string>Milab</string>
+             <string>IUST</string>
             </property>
             <property name="checked">
              <bool>true</bool>
