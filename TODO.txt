@@ -40,3 +40,5 @@ TODO:
 	- Modify Q_IUST and weights @user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 608, 795
 
 	- Modify @user/MIT_Controller/FSM_States/FSM_State_SquatDown
+
+	- Modify balance limitation @user/MIT_Controller/FSM_States/FSM_State_BalanceStand.h -> 50-55
