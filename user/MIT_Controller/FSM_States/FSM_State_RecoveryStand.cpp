@@ -16,7 +16,7 @@
  */
 template <typename T>
 FSM_State_RecoveryStand<T>::FSM_State_RecoveryStand(ControlFSMData<T>* _controlFSMData)
-    : FSM_State<T>(_controlFSMData, FSM_StateName::STAND_UP, "STAND_UP"){
+    : FSM_State<T>(_controlFSMData, FSM_StateName::RECOVERY_STAND, "RECOVERY_STAND"){
   // Do nothing
   // Set the pre controls safety checks
   this->checkSafeOrientation = false;
@@ -61,6 +61,7 @@ FSM_State_RecoveryStand<T>::FSM_State_RecoveryStand(ControlFSMData<T>* _controlF
     rolling_jpos[1] << 1.3f, -3.1f, 2.77f;
     rolling_jpos[2] << 1.5f, -1.6f, 2.77f;
     rolling_jpos[3] << 1.3f, -3.1f, 2.77f;
+    f_ff << 0.f, 0.f, -65.f;
 
     f_ff << 0.f, 0.f, -25.f;
   }
@@ -337,15 +338,23 @@ FSM_StateName FSM_State_RecoveryStand<T>::checkTransition() {
       this->nextStateName = FSM_StateName::LOCOMOTION;
       break;
 
-    case K_PASSIVE:  // normal c
+    case K_SQUAT_DOWN:
+      this->nextStateName = FSM_StateName::SQUAT_DOWN;
+      break;
+
+    case K_PASSIVE:
       this->nextStateName = FSM_StateName::PASSIVE;
+      break;
+
+    case K_STAND_UP:
+      this->nextStateName = FSM_StateName::STAND_UP;
       break;
 
     case K_BALANCE_STAND: 
       this->nextStateName = FSM_StateName::BALANCE_STAND;
       break;
 
-    case K_BACKFLIP: 
+    /*case K_BACKFLIP: 
       this->nextStateName = FSM_StateName::BACKFLIP;
       break;
 
@@ -355,7 +364,7 @@ FSM_StateName FSM_State_RecoveryStand<T>::checkTransition() {
 
     case K_VISION: 
       this->nextStateName = FSM_StateName::VISION;
-      break;
+      break;*/
 
     default:
       std::cout << "[CONTROL FSM] Bad Request: Cannot transition from "
@@ -389,7 +398,15 @@ TransitionData<T> FSM_State_RecoveryStand<T>::transition() {
       this->transitionData.done = true;
       break;
 
-    case FSM_StateName::BACKFLIP:
+    case FSM_StateName::SQUAT_DOWN:
+       this->transitionData.done = true;
+       break;
+
+    case FSM_StateName::STAND_UP:
+       this->transitionData.done = true;
+       break;
+
+    /*case FSM_StateName::BACKFLIP:
       this->transitionData.done = true;
       break;
 
@@ -399,7 +416,7 @@ TransitionData<T> FSM_State_RecoveryStand<T>::transition() {
 
     case FSM_StateName::VISION:
       this->transitionData.done = true;
-      break;
+      break;*/
 
     default:
       std::cout << "[CONTROL FSM] Something went wrong in transition"

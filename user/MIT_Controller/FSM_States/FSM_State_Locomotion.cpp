@@ -95,14 +95,14 @@ FSM_StateName FSM_State_Locomotion<T>::checkTransition() {
       case K_LOCOMOTION:
         break;
 
-      case K_BALANCE_STAND:
+      /*case K_BALANCE_STAND:
         // Requested change to BALANCE_STAND
         this->nextStateName = FSM_StateName::BALANCE_STAND;
 
         // Transition time is immediate
         this->transitionDuration = 0.0;
 
-        break;
+        break;*/
 
       case K_PASSIVE:
         // Requested change to BALANCE_STAND
@@ -113,20 +113,20 @@ FSM_StateName FSM_State_Locomotion<T>::checkTransition() {
 
         break;
 
-      case K_STAND_UP:
+      /*case K_STAND_UP:
         this->nextStateName = FSM_StateName::STAND_UP;
         this->transitionDuration = 0.;
-        break;
+        break;*/
 
       case K_RECOVERY_STAND:
         this->nextStateName = FSM_StateName::RECOVERY_STAND;
         this->transitionDuration = 0.;
         break;
 
-      case K_VISION:
+      /*case K_VISION:
         this->nextStateName = FSM_StateName::VISION;
         this->transitionDuration = 0.;
-        break;
+        break;*/
 
       default:
         std::cout << "[CONTROL FSM] Bad Request: Cannot transition from "
@@ -154,6 +154,7 @@ template <typename T>
 TransitionData<T> FSM_State_Locomotion<T>::transition() {
   // Switch FSM control mode
   switch (this->nextStateName) {
+    /*
     case FSM_StateName::BALANCE_STAND:
       LocomotionControlStep();
 
@@ -165,7 +166,7 @@ TransitionData<T> FSM_State_Locomotion<T>::transition() {
       }
 
       break;
-
+      */
     case FSM_StateName::PASSIVE:
       this->turnOffAllSafetyChecks();
 
@@ -173,17 +174,17 @@ TransitionData<T> FSM_State_Locomotion<T>::transition() {
 
       break;
 
-    case FSM_StateName::STAND_UP:
+    /*case FSM_StateName::STAND_UP:
       this->transitionData.done = true;
-      break;
+      break;*/
 
     case FSM_StateName::RECOVERY_STAND:
       this->transitionData.done = true;
       break;
 
-    case FSM_StateName::VISION:
+    /*case FSM_StateName::VISION:
       this->transitionData.done = true;
-      break;
+      break;*/
 
 
     default:
