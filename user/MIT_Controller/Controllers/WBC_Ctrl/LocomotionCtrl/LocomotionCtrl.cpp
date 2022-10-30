@@ -73,7 +73,7 @@ void LocomotionCtrl<T>::_ContactTaskUpdate(void* input, ControlFSMData<T> & data
   }
 }
 
-template<typename T>
+/*template<typename T>
 void LocomotionCtrl<T>::_ContactTaskUpdateTEST(void* input, ControlFSMData<T> & data){
   (void)data;
   _input_data = static_cast<LocomotionCtrlData<T>* >(input);
@@ -120,7 +120,7 @@ void LocomotionCtrl<T>::_ContactTaskUpdateTEST(void* input, ControlFSMData<T> & 
       WBCtrl::_task_list.push_back(_foot_task[leg]);
     }
   }
-}
+}*/
 template<typename T>
 void LocomotionCtrl<T>::_ParameterSetup(const MIT_UserParameters* param){
 

@@ -138,6 +138,8 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
     stand_traj[5] = seResult.rpy[2];
     world_position_desired[0] = stand_traj[0];
     world_position_desired[1] = stand_traj[1];
+    // set WBC and MPC signal
+    standingMPC = true;
   }
 
   // pick gait
@@ -228,6 +230,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
 
   if(gait != &standing) {
     world_position_desired += dt * Vec3<float>(v_des_world[0], v_des_world[1], 0);
+    standingMPC = false;
   }
 
   // some first time initialization
@@ -310,7 +313,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
       (0.5f*seResult.position[2]/9.81f) * (-seResult.vWorld[0]*_yaw_turn_rate);
     pfx_rel = fminf(fmaxf(pfx_rel, -p_rel_max), p_rel_max);
     pfy_rel = fminf(fmaxf(pfy_rel, -p_rel_max), p_rel_max);
-    Pf[0] +=  pfx_rel + 0.04;
+    Pf[0] +=  pfx_rel;
     Pf[1] +=  pfy_rel;
     Pf[2] = -0.003;
     //Pf[2] = -0.005;
@@ -442,7 +445,8 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
       Vec3<float> vDesLeg = seResult.rBody * (vDesFootWorld - seResult.vWorld);
       //cout << "Foot " << foot << " relative velocity desired: " << vDesLeg.transpose() << "\n";
 
-      if(!data.userParameters->use_wbc){
+      //only using MPC
+      if(!data.userParameters->use_wbc || standingMPC){
         data._legController->commands[foot].pDes = pDesLeg;
         data._legController->commands[foot].vDes = vDesLeg;
         data._legController->commands[foot].kpCartesian = Kp_stance;
