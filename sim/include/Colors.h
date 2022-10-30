@@ -7,8 +7,8 @@
 #ifndef PROJECT_COLORS_H
 #define PROJECT_COLORS_H
 
-static constexpr float windows2000[] = {220.f / 256.f, 234.f / 256.f,
-                                        242.f / 256.f};
+static constexpr float windows2000[] = {220.f / 256.f, 234.f / 256.f, 242.f / 256.f};
+static constexpr float terrainColor[] = {247.f / 256.f, 138.f / 256.f, 21.f / 256.f};
 static constexpr float disgustingGreen[] = {0.f, 0.2f, 0.2f};
 static constexpr float checkerboardDark[] = {0.3f, 0.3f, 0.3f};
 static constexpr float checkerboardLight[] = {0.6f, 0.6f, 0.6f};
