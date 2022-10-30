@@ -421,6 +421,7 @@ void Simulation::lowLevelControl() {
       _spiData.qd_hip[leg] = _simulator->getState().qd[leg * 3 + 1];
       _spiData.qd_knee[leg] = _simulator->getState().qd[leg * 3 + 2];
     }
+    isIUST = false;
 
     // run spine board control:
     for (auto& spineBoard : _spineBoards) {
