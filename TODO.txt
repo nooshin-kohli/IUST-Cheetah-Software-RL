@@ -16,7 +16,7 @@ TODO:
 
 	- Modify iterations_between_mpc @user/MIT_Controller/FSM_States/FSM_State_Locomotion.cpp -> 25,27
 
-	- Modify user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 45,46,82,135,193,628
+	- Modify user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 45,46,82,135,192,628
 
 	- Modify knee barrier degree @user/MIT_Controller/Controllers/WBC_Ctrl/WBC_Ctrl.cpp -> 134,135,137
 
@@ -37,7 +37,7 @@ TODO:
 	
 	- Modify SpineBoard private values @common/include/SimUtilities/SpineBoard.h -> 70-77
 
-	- Modify Q_IUST and weights @user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 608, 795
+	- Modify Q_IUST and weights @user/MIT_Controller/Controllers/ConvexMPC/ConvexMPCLcomotion.cpp -> 79,132,608,795
 
 	- Modify @user/MIT_Controller/FSM_States/FSM_State_SquatDown
 

@@ -94,9 +94,9 @@ void ConvexMPCLocomotion::_SetupCommand(ControlFSMData<float> & data){
     x_vel_cmd = rc_cmd->v_des[0];
     y_vel_cmd = rc_cmd->v_des[1] * 0.5;
     _body_height += rc_cmd->height_variation * 0.08;
-  }else{
+  } else {
     _yaw_turn_rate = data._desiredStateCommand->rightAnalogStick[0];
-    x_vel_cmd = data._desiredStateCommand->leftAnalogStick[1];
+    x_vel_cmd = data._desiredStateCommand->leftAnalogStick[1] * 2.0;
     y_vel_cmd = data._desiredStateCommand->leftAnalogStick[0];
   }
   _x_vel_des = _x_vel_des*(1-filter) + x_vel_cmd*filter;
@@ -130,7 +130,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
 
     if(data._quadruped->_robotType != RobotType::MINI_CHEETAH) {
         stand_traj[2] = 0.40;
-    }else if(data._quadruped->_robotType == RobotType::MINI_CHEETAH){
+    } else if(data._quadruped->_robotType == RobotType::MINI_CHEETAH) {
         stand_traj[2] = 0.21;}
 
     stand_traj[3] = 0;
@@ -240,7 +240,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
     for(int i = 0; i < 4; i++)
     {
 
-      footSwingTrajectories[i].setHeight(0.05);
+      footSwingTrajectories[i].setHeight(data.userParameters->Swing_traj_height);
       footSwingTrajectories[i].setInitialPosition(pFoot[i]);
       footSwingTrajectories[i].setFinalPosition(pFoot[i]);
 
@@ -268,7 +268,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
     }
     //if(firstSwing[i]) {
     //footSwingTrajectories[i].setHeight(.05);
-    footSwingTrajectories[i].setHeight(.06);
+    footSwingTrajectories[i].setHeight(data.userParameters->Swing_traj_height);
    
     Vec3<float> offset;
     if (data._quadruped->_robotType == RobotType::IUST){
@@ -310,7 +310,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
       (0.5f*seResult.position[2]/9.81f) * (-seResult.vWorld[0]*_yaw_turn_rate);
     pfx_rel = fminf(fmaxf(pfx_rel, -p_rel_max), p_rel_max);
     pfy_rel = fminf(fmaxf(pfy_rel, -p_rel_max), p_rel_max);
-    Pf[0] +=  pfx_rel;
+    Pf[0] +=  pfx_rel + 0.04;
     Pf[1] +=  pfy_rel;
     Pf[2] = -0.003;
     //Pf[2] = -0.005;
@@ -619,6 +619,8 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
     memcpy(Q,Q_CH3,sizeof(Q_CH3));
 }
 //    Q Debug:
+//    alpha = data.userParameters->R;
+//    std::cout<<"R: "<<alpha<<" Q: ";
 //    for (int i = 0; i < 12; ++i) {
 //        if (i<3){
 //            Q[i] = data.userParameters->Q_ang[i];
@@ -647,7 +649,7 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
 
   if(alpha > 1e-4) {
     std::cout << "Alpha was set too high (" << alpha << ") adjust to 1e-5\n";
-    alpha = 1e-7;
+    alpha = 1e-6;
   }
 
   Vec3<float> pxy_act(p[0], p[1], 0);
@@ -660,7 +662,7 @@ void ConvexMPCLocomotion::solveDenseMPC(int *mpcTable, ControlFSMData<float> &da
   dtMPC = dt * iterationsBetweenMPC;
 
   if (data._quadruped->_robotType == RobotType::IUST) {
-        setup_problem(dtMPC,horizonLength,0.4,150);
+        setup_problem(dtMPC,horizonLength,0.4,180);
     } else if (data._quadruped->_robotType == RobotType::MINI_CHEETAH) {
         setup_problem(dtMPC,horizonLength,0.4,120);
     } else if (data._quadruped->_robotType == RobotType::CHEETAH_3) {
@@ -759,7 +761,7 @@ void ConvexMPCLocomotion::initSparseMPC() {
               0, 0.26, 0,
               0, 0, 0.242;
   double mass = 9;
-  double maxForce = 120;
+  double maxForce = 180;
 
   std::vector<double> dtTraj;
   for(int i = 0; i < horizonLength; i++) {
@@ -797,7 +799,7 @@ void ConvexMPCLocomotion::initIUSTSparseMPC() {
 
   _sparseCMPC.setRobotParameters(baseInertia, mass, maxForce);
   _sparseCMPC.setFriction(0.4);
-  _sparseCMPC.setWeights(weights, 1e-7);
+  _sparseCMPC.setWeights(weights, 8e-6);
   _sparseCMPC.setDtTrajectory(dtTraj);
 
   _sparseTrajectory.resize(horizonLength);
