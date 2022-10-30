@@ -123,7 +123,7 @@ FSM_StateName FSM_State_BalanceStand<T>::checkTransition() {
       this->transitionDuration = 0.0;
       break;
 
-    /*case K_LOCOMOTION:
+    case K_LOCOMOTION:
       // Requested change to balance stand
       this->nextStateName = FSM_StateName::LOCOMOTION;
 
@@ -132,7 +132,7 @@ FSM_StateName FSM_State_BalanceStand<T>::checkTransition() {
 
       // Set the next gait in the scheduler to
       this->_data->_gaitScheduler->gaitData._nextGait = GaitType::TROT;
-      break;*/
+      break;
 
     case K_PASSIVE:
       this->nextStateName = FSM_StateName::PASSIVE;
