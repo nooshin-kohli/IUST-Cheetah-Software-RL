@@ -44,3 +44,5 @@ TODO:
 	- Modify balance limitation @user/MIT_Controller/FSM_States/FSM_State_BalanceStand.h -> 50-55
 
 	- Add a new radio controller if it was necessary (using commit a59b791d3b4ec3bfee860264e18e3738b8866a0c)
+
+	- Check abad limitation @common/src/SimUtilities/SpineBoard.cpp -> 93-97
