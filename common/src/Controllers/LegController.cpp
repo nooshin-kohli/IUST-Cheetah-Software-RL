@@ -265,7 +265,7 @@ void LegController<T>::setLcm(leg_control_data_lcmt *lcmData, leg_control_comman
 template<typename T>
 void LegController<T>::output2File() {
   ofstream leg_data;
-  leg_data.open("/home/IUST-Cheetah-Software/debug_data/leg_controller_data.txt", ios::app);
+  leg_data.open("/home/IUST-Cheetah-Software/debug_tools/leg_controller_data.txt", ios::app);
   if (!leg_data.is_open()) {
     cout << "[LegController] Open leg_control_data.txt failed!" << endl;
   } else {
