@@ -270,7 +270,7 @@ void FSM_State_Locomotion<T>::LocomotionControlStep() {
     Kd_backup[leg] = this->_data->_legController->commands[leg].kdCartesian;
   }
 
-  if(this->_data->userParameters->use_wbc > 0.9){
+  if(this->_data->userParameters->use_wbc > 0.9 && !cMPCOld->standingMPC){
     _wbc_data->pBody_des = cMPCOld->pBody_des;
     _wbc_data->vBody_des = cMPCOld->vBody_des;
     _wbc_data->aBody_des = cMPCOld->aBody_des;
