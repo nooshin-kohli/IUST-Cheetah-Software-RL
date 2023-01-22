@@ -270,6 +270,8 @@ void IUSTrobotHardwareBridge::run() {
     if(_userControlParameters) {
       try {
         _userControlParameters->initializeFromYamlFile(THIS_COM "config/iust-user-parameters.yaml");
+        std::string yamlName = "milab-user-parameters.yaml";
+        printf("Loaded user parameters from yaml file: %s\n", yamlName.c_str());
       } catch(std::exception& e) {
         printf("Failed to initialize user parameters from yaml file: %s\n", e.what());
         exit(1);
