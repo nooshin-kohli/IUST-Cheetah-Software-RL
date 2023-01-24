@@ -122,7 +122,7 @@ void LocomotionCtrl<T>::_ContactTaskUpdateTEST(void* input, ControlFSMData<T> & 
   }
 }*/
 template<typename T>
-void LocomotionCtrl<T>::_ParameterSetup(const MIT_UserParameters* param){
+void LocomotionCtrl<T>::_ParameterSetup(const IUST_UserParameters* param){
 
   for(size_t i(0); i<3; ++i){
     ((BodyPosTask<T>*)_body_pos_task)->_Kp[i] = param->Kp_body[i];

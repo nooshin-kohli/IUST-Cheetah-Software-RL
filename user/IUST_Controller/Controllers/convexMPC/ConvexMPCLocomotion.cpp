@@ -17,7 +17,7 @@
 // Controller
 ////////////////////
 
-ConvexMPCLocomotion::ConvexMPCLocomotion(float _dt, int _iterations_between_mpc, MIT_UserParameters* parameters, float fmax, RobotType &robotType) :
+ConvexMPCLocomotion::ConvexMPCLocomotion(float _dt, int _iterations_between_mpc, IUST_UserParameters* parameters, float fmax, RobotType &robotType) :
   iterationsBetweenMPC(_iterations_between_mpc),
   horizonLength(10),
   dt(_dt),

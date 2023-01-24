@@ -13,7 +13,7 @@
 
 #define WBCtrl WBC_Ctrl<T>
 
-class MIT_UserParameters;
+class IUST_UserParameters;
 
 template<typename T>
 class WBC_Ctrl{

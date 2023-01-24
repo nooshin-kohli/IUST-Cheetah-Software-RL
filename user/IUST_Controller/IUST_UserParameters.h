@@ -3,9 +3,9 @@
 
 #include "ControlParameters/ControlParameters.h"
 
-class MIT_UserParameters : public ControlParameters {
+class IUST_UserParameters : public ControlParameters {
 public:
-  MIT_UserParameters()
+  IUST_UserParameters()
       : ControlParameters("user-parameters"),
         INIT_PARAMETER(cmpc_gait),
         INIT_PARAMETER(cmpc_x_drag),

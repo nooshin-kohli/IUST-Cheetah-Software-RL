@@ -7,9 +7,9 @@
  */
 
 #include <main_helper.h>
-#include "MIT_Controller.hpp"
+#include "IUST_Controller.hpp"
 
 int main(int argc, char** argv) {
-  main_helper(argc, argv, new MIT_Controller());
+  main_helper(argc, argv, new IUST_Controller());
   return 0;
 }
