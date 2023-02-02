@@ -1,5 +1,5 @@
-#ifndef MIT_CONTROLLER
-#define MIT_CONTROLLER
+#ifndef IUST_CONTROLLER
+#define IUST_CONTROLLER
 
 #include <RobotController.h>
 #include "Controllers/GaitScheduler.h"
