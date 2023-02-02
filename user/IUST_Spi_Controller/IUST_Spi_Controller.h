@@ -1,5 +1,5 @@
-#ifndef CHEETAH_SOFTWARE_MINICHEETAHSPI_CONTROLLER_H
-#define CHEETAH_SOFTWARE_MINICHEETAHSPI_CONTROLLER_H
+#ifndef CHEETAH_SOFTWARE_IUST_SPI_CONTROLLER_H
+#define CHEETAH_SOFTWARE_IUST_SPI_CONTROLLER_H
 
 #include <RobotController.h>
 #include <lcm/lcm-cpp.hpp>
@@ -7,16 +7,16 @@
 #include <thread>
 #include <mutex>
 
-class MiniCheetahSpi_Controller : public RobotController {
+class IUST_Spi_Controller : public RobotController {
 public:
-  MiniCheetahSpi_Controller():RobotController(), _lcm(getLcmUrl(255)) {
+  IUST_Spi_Controller():RobotController(), _lcm(getLcmUrl(255)) {
 
-    _lcm.subscribe("spi_debug_cmd", &MiniCheetahSpi_Controller::handleLcm, this);
+    _lcm.subscribe("spi_debug_cmd", &IUST_Spi_Controller::handleLcm, this);
     _lcmThread = std::thread([&](){
       for(;;) _lcm.handle();
     });
   }
-  virtual ~MiniCheetahSpi_Controller(){}
+  virtual ~IUST_Spi_Controller(){}
 
   virtual void initializeController(){}
   virtual void runController();
@@ -41,4 +41,4 @@ private:
   std::mutex _mutex;
 };
 
-#endif //CHEETAH_SOFTWARE_MINICHEETAHSPI_CONTROLLER_H
+#endif //CHEETAH_SOFTWARE_IUST_SPI_CONTROLLER_H
