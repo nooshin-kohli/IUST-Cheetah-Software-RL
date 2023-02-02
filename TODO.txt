@@ -50,3 +50,5 @@ TODO:
 	- Modify hip and knee limitation @robot/src/rt/rt_spi.cpp -> 17,18,39,40,48,49,50
 
 	- Modify parameters for JOINT PD CONTROL @config/jpos_user_parameters.yaml
+
+	- Modify @scripts/run_iust.sh
