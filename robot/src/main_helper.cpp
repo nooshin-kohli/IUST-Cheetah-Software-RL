@@ -39,10 +39,10 @@ int main_helper(int argc, char** argv, RobotController* ctrl) {
 
   if (argv[1][0] == 'i') {
     gMasterConfig._robot = RobotType::IUST;
-  } else if (argv[1][0] == '3') {
-    gMasterConfig._robot = RobotType::CHEETAH_3;
   } else if (argv[1][0] == 'm') {
     gMasterConfig._robot = RobotType::MINI_CHEETAH;
+  } else if (argv[1][0] == '3') {
+    gMasterConfig._robot = RobotType::CHEETAH_3;
   } else {
     printUsage();
     return EXIT_FAILURE;
@@ -67,8 +67,7 @@ int main_helper(int argc, char** argv, RobotController* ctrl) {
 
   printf("[Quadruped] Cheetah Software\n");
   printf("        Quadruped:  %s\n",
-         gMasterConfig._robot == RobotType::MINI_CHEETAH ? "Mini Cheetah"
-                                                         : "IUST robot");
+         gMasterConfig._robot == RobotType::MINI_CHEETAH ? "Mini Cheetah" : "IUST robot");
   printf("        Driver: %s\n", gMasterConfig.simulated
                                      ? "Development Simulation Driver"
                                      : "Quadruped Driver");
@@ -80,10 +79,6 @@ int main_helper(int argc, char** argv, RobotController* ctrl) {
       return EXIT_FAILURE;
     }
     if (gMasterConfig._robot == RobotType::IUST) {
-      SimulationBridge simulationBridge(gMasterConfig._robot, ctrl);
-      simulationBridge.run();
-      printf("[Quadruped] SimDriver run() has finished!\n");
-    } else if (gMasterConfig._robot == RobotType::MINI_CHEETAH) {
       SimulationBridge simulationBridge(gMasterConfig._robot, ctrl);
       simulationBridge.run();
       printf("[Quadruped] SimDriver run() has finished!\n");
@@ -99,11 +94,11 @@ int main_helper(int argc, char** argv, RobotController* ctrl) {
     if (gMasterConfig._robot == RobotType::IUST) {
       IUSTrobotHardwareBridge hw(ctrl, gMasterConfig.load_from_file);
       hw.run();
-      printf("[Quadruped] SimDriver run() has finished!\n");
+      printf("[Quadruped] HardwareDriver run() has finished!\n");
     } else if (gMasterConfig._robot == RobotType::MINI_CHEETAH) {
       MiniCheetahHardwareBridge hw(ctrl, gMasterConfig.load_from_file);
       hw.run();
-      printf("[Quadruped] SimDriver run() has finished!\n");
+      printf("[Quadruped] HardwareDriver run() has finished!\n");
     } else if (gMasterConfig._robot == RobotType::CHEETAH_3) {
       Cheetah3HardwareBridge hw(ctrl);
       hw.run();
