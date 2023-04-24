@@ -3,7 +3,7 @@
  *
  *  This class contains all the ControlParameters for the simulator.
  *  In most cases, the simulator just loads the control parameters in
- * simulator-defaults.ini and this is okay
+ *  simulator-defaults.ini and this is okay
  */
 
 #ifndef PROJECT_SIMULATORPARAMETERS_H
@@ -14,7 +14,7 @@
 #define SIMULATOR_DEFAULT_PARAMETERS "/default-simulator-parameters.yaml"
 #define MINI_CHEETAH_DEFAULT_PARAMETERS "/mini-cheetah-defaults.yaml"
 #define CHEETAH_3_DEFAULT_PARAMETERS "/cheetah-3-defaults.yaml"
-#define IUST_DEFAULT_PARAMETERS "iust-robot-parameters.yaml"
+#define IUST_DEFAULT_PARAMETERS "/iust-robot-parameters.yaml"
 
 /*!
  * Simulator specific control parameters

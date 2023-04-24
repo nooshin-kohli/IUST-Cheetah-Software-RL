@@ -15,7 +15,7 @@
 #define TASK_PRIORITY 49      // linux priority, this is not the nice value
 
 #include <string>
-#include <lcm-cpp.hpp>
+#include <lcm/lcm-cpp.hpp>
 #include <lord_imu/LordImu.h>
 
 #include "RobotRunner.h"

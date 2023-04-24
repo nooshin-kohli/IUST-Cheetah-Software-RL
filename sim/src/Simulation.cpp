@@ -62,7 +62,7 @@ Simulation::Simulation(RobotType robot, Graphics3D* window,
     printf("[Simulation] Setup Cheetah graphics...\n");
     Vec4<float> truthColor, seColor;
     truthColor << 0.2, 0.4, 0.2, 0.6;
-    seColor << .75,.75,.75, 1.0;
+    seColor << .1,.1,.1, 1.0;
 
     if (_robot == RobotType::IUST){
         _simRobotID =  window->setupIUST(truthColor, true, true);

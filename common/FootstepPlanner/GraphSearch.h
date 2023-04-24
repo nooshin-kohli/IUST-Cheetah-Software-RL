@@ -13,7 +13,7 @@ struct ContactState {
     };
   };
 
-  ContactState(bool _fr, bool _fl, bool _rr, bool _rl) {
+  ContactState (bool _fr, bool _fl, bool _rr, bool _rl) {
     fr = _fr;
     fl = _fl;
     rr = _rr;

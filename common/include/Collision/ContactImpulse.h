@@ -28,7 +28,7 @@ class ContactImpulse : public ContactConstraint<T> {
     _b_debug = false;
   }
 
-  virtual ~ContactImpulse() {}
+  virtual ~ContactImpulse() { }
 
   /*!
    * Impulse-based contact dynamics do not adjust the external forces, they modify q_dot

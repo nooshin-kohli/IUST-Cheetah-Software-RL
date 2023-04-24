@@ -23,7 +23,7 @@
 #include "obj_loader.h"
 #include "sim_utilities.h"
 
-#include <QMatrix4x4>
+//#include <QMatrix4x4>
 
 #include <stdlib.h>
 #include <vector>

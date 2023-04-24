@@ -31,15 +31,13 @@ class CollisionMesh : public Collision<T> {
    */
   CollisionMesh(const T& mu, const T& restitution, const T& grid,
                 const Vec3<T>& left_corner_loc, const DMat<T>& height_map)
-      : Collision<T>(mu, restitution),
-        _left_corner_loc(left_corner_loc),
-        _height_map(height_map),
-        _grid(grid) {
+                : Collision<T>(mu, restitution), _left_corner_loc(left_corner_loc),
+                _height_map(height_map), _grid(grid) {
     _x_max = (_height_map.rows() - 1) * _grid;
     _y_max = (_height_map.cols() - 1) * _grid;
   }
 
-  virtual ~CollisionMesh() {}
+  virtual ~CollisionMesh() { }
   virtual bool ContactDetection(const Vec3<T>& cp_pos, T& penetration,
                                 Mat3<T>& cp_frame);
 

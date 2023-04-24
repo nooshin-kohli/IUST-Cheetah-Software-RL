@@ -12,7 +12,7 @@ static constexpr float terrainColor[] = {247.f / 256.f, 138.f / 256.f, 21.f / 25
 static constexpr float disgustingGreen[] = {0.f, 0.2f, 0.2f};
 static constexpr float checkerboardDark[] = {0.3f, 0.3f, 0.3f};
 static constexpr float checkerboardLight[] = {0.6f, 0.6f, 0.6f};
-static constexpr float defaultRobotColor[] = {0.1f, 0.1f, 0.1f};
+static constexpr float defaultRobotColor[] = {0.0f, 0.0f, 0.0f};
 static constexpr float debugRedColor[] = {0.5f, 0.05f, 0.05f};
 
 #endif  // PROJECT_COLORS_H

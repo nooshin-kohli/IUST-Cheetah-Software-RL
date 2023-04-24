@@ -22,7 +22,7 @@ class ContactSpringDamper : public ContactConstraint<T> {
    * @param model : FloatingBaseModel for the contact dynamics
    */
   ContactSpringDamper(FloatingBaseModel<T>* model)
-      : ContactConstraint<T>(model) {
+                      : ContactConstraint<T>(model) {
     _nGC = CC::_model->_nGroundContact;
     for (size_t i(0); i < _nGC; ++i) {
       _tangentialDeflections.push_back(Vec2<T>::Zero());
@@ -30,7 +30,7 @@ class ContactSpringDamper : public ContactConstraint<T> {
     deflectionRate.resize(_nGC);
   }
 
-  virtual ~ContactSpringDamper() {}
+  virtual ~ContactSpringDamper() { }
 
   /*!
    * Run the ground contact model for a single collision plane on a list of

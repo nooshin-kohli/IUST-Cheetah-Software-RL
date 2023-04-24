@@ -88,7 +88,7 @@ template <typename T>
 void computeLegJacobianAndPosition(Quadruped<T>& quad, Vec3<T>& q, Mat3<T>* J,
                                    Vec3<T>* p, int leg);
 template <typename T>
-void computeMilabJacobianAndPosition(Quadruped<T>& quad, Vec3<T>& q, Mat6<T>* JJ,
+void computeIUSTJacobianAndPosition(Quadruped<T>& quad, Vec3<T>& q, Mat6<T>* JJ,
                                      Vec3<T>* p, int leg);
 
 #endif  // PROJECT_LEGCONTROLLER_H

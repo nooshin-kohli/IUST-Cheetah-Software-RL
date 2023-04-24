@@ -30,14 +30,14 @@ class ContactConstraint {
    * @param model : FloatingBaseModel for the contact
    */
   ContactConstraint(FloatingBaseModel<T>* model)
-      : _nContact(0), _nCollision(0) {
+                  : _nContact(0), _nCollision(0) {
     _model = model;
     for (size_t i(0); i < _model->_nGroundContact; ++i) {
       _cp_force_list.push_back(Vec3<T>::Zero());
     }
   }
 
-  virtual ~ContactConstraint() {}
+  virtual ~ContactConstraint() { }
 
   /*!
    * Add collision object

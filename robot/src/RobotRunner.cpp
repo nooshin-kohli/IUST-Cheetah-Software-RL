@@ -180,7 +180,9 @@ void RobotRunner::run() {
  */
 void RobotRunner::setupStep() {
   // Update the leg data
-  if (robotType == RobotType::MINI_CHEETAH) {
+  if (robotType == RobotType::IUST) {
+    _legController->updateData(spiData);
+  } else if (robotType == RobotType::MINI_CHEETAH) {
     _legController->updateData(spiData);
   } else if (robotType == RobotType::CHEETAH_3) {
     _legController->updateData(tiBoardData);

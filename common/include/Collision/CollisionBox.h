@@ -39,9 +39,8 @@ class CollisionBox : public Collision<T> {
     _size[2] = height;
   }
 
-  virtual ~CollisionBox() {}
-  virtual bool ContactDetection(const Vec3<T>& cp_pos, T& penetration,
-                                Mat3<T>& cp_frame);
+  virtual ~CollisionBox() { }
+  virtual bool ContactDetection(const Vec3<T>& cp_pos, T& penetration, Mat3<T>& cp_frame);
 
  private:
   T _size[3];

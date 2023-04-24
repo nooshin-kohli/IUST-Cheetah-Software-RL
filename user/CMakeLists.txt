@@ -1,4 +1,4 @@
-add_subdirectory(IUST_JPos_Controller)
-add_subdirectory(Example_Leg_InvDyn)
-add_subdirectory(IUST_Controller)
-add_subdirectory(IUST_Spi_Controller)
+#add_subdirectory(Example_Leg_InvDyn)
+add_subdirectory(MiLAB_JPos_Controller)
+add_subdirectory(MiLAB_Controller)
+add_subdirectory(MiLAB_Spi_Controller)

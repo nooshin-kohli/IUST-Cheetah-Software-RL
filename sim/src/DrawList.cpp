@@ -261,10 +261,10 @@ size_t DrawList::addIUST(Vec4<float> color, bool useOld, bool canHide) {
 
   // upper
   upperOffsets[0].setToIdentity();  // right
-  upperOffsets[0].rotate(180, 0, 0, 1);
+  //upperOffsets[0].rotate(180, 0, 0, 1);
 
   upperOffsets[1].setToIdentity();  // left
-  upperOffsets[1].rotate(180, 0, 0, 1);
+  //upperOffsets[1].rotate(180, 0, 0, 1);
 
   // lower
   lower.setToIdentity();

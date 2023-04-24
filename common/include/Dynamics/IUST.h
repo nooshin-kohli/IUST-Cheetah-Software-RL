@@ -32,9 +32,9 @@ Quadruped<T> buildIUST()
     iust._rotorMass = 0.084;
 
     //Dimentions(m)
-    iust._bodyLength = 0.269;
-    iust._bodyWidth = 0.100;
-    iust._bodyHeight = 0.096;
+    iust._bodyLength = 0.369; //0.269
+    iust._bodyWidth = 0.15054; //0.19054
+    iust._bodyHeight = 0.089;
 
     //Gear ratios
     iust._abadGearRatio = 6;

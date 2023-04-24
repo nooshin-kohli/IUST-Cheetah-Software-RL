@@ -32,8 +32,7 @@ class CollisionPlane : public Collision<T> {
 
   virtual ~CollisionPlane() {}
 
-  virtual bool ContactDetection(const Vec3<T>& cp_pos, T& penetration,
-                                Mat3<T>& cp_frame);
+  virtual bool ContactDetection(const Vec3<T>& cp_pos, T& penetration, Mat3<T>& cp_frame);
 
  private:
   T _height;
