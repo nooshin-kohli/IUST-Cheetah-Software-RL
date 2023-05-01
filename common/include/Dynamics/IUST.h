@@ -32,34 +32,34 @@ Quadruped<T> buildIUST()
     iust._rotorMass = 0.084;
 
     //Dimentions(m)
-    iust._bodyLength = 0.369; //0.269
-    iust._bodyWidth = 0.15054; //0.19054
+    iust._bodyLength = 0.375; //0.269 *
+    iust._bodyWidth = 0.10054; //0.19054 *
     iust._bodyHeight = 0.089;
 
     //Gear ratios
     iust._abadGearRatio = 6;
     iust._hipGearRatio = 6;
-    iust._kneeGearRatio = 9.33;
+    iust._kneeGearRatio = 6;
 
     //Link lengths(m)
     iust._abadLinkLength = 0.0576;
     iust._hipLinkLength = 0.213;
     iust._kneeLinkY_offset = 0.07125;
-    iust._kneeLinkLength = 0.240;
+    iust._kneeLinkLength = 0.260; // *
     iust._maxLegLength = 0.453;
     iust._hipRotorLocationYOffset = 0.0527;
 
     //Motor properties
-    iust._motorTauMax = 3.f;
-    iust._batteryV = 24;
-    iust._motorKT = 0.05;   //(MiLab Team: this is flux linkage * pole pairs)
-    iust._motorR = 0.173;
-    iust._jointDamping = 0.01;
-    iust._jointDryFriction = 0.2;
+    iust._motorTauMax = 8.f;
+    iust._batteryV = 36;
+    iust._motorKT = 0.08;   //(MiLab Team: this is flux linkage * pole pairs)
+    iust._motorR = 0.13;
+    iust._jointDamping = 0.02;
+    iust._jointDryFriction = 0.4;
 
     //Rotor inertia (if the rotor is oriented so it spins around the z-axis)
     Mat3<T> rotorRotationalInertiaZ;
-    rotorRotationalInertiaZ << 33, 0, 0, 0, 33, 0, 0, 0, 63;
+    rotorRotationalInertiaZ << 53, 0, 0, 0, 53, 0, 0, 0, 105;
     rotorRotationalInertiaZ = rotorRotationalInertiaZ * 1e-6;
 
     Mat3 <T> RY = coordinateRotation<T>(CoordinateAxis::Y, M_PI / 2);
@@ -69,24 +69,24 @@ Quadruped<T> buildIUST()
 
     //Spatial inertia for abad
     Mat3<T> abadRotationalInertia;
-    abadRotationalInertia << 381, 58, 0.45, 58, 560, 0.95, 0.45, 0.95, 444;
+    abadRotationalInertia << 712.408, -3.535, -5.317, -3.535, 1095.432, 13.78, -5.317, 13.78, 772.605;
     abadRotationalInertia = abadRotationalInertia * 1e-6;
-    Vec3<T> abadCOM(0, 0.036, 0);  // LEFT
+    Vec3<T> abadCOM(-0.004444, -0.000541, -0.000536);  // LEFT
     SpatialInertia<T> abadInertia(iust._abadMass, abadCOM, abadRotationalInertia);
 
     //Spatial inertia for hip
     Mat3<T> hipRotationalInertia;
-    hipRotationalInertia << 1983, 245, 13, 245, 2103, 1.5, 13, 1.5, 408;
+    hipRotationalInertia << 17479.820, -9.63, 1236.601, -9.63, 17229.4, -20.313, 1236.601, -20.313, 2982.14;
     hipRotationalInertia = hipRotationalInertia * 1e-6;
-    Vec3<T> hipCOM(0, 0.016, -0.02);
+    Vec3<T> hipCOM(-0.004928, -0.022568, -0.039632);
     SpatialInertia<T> hipInertia(iust._hipMass, hipCOM, hipRotationalInertia);
 
     //Spatial inertia for knee
     Mat3<T> kneeRotationalInertia, kneeRotationalInertiaRotated;
-    kneeRotationalInertiaRotated << 6, 0, 0, 0, 248, 0, 0, 0, 245;
+    kneeRotationalInertiaRotated << 7880.558, -0.083, -15.380, -0.083, 7917.82, -0.27, -15.38, -0.27, 71.290;
     kneeRotationalInertiaRotated = kneeRotationalInertiaRotated * 1e-6;
     //kneeRotationalInertia = RY * kneeRotationalInertiaRotated * RY.transpose();
-    Vec3<T> kneeCOM(0, 0, -0.061);
+    Vec3<T> kneeCOM(-0.000838, -0.000038, -0.157249);
     SpatialInertia<T> kneeInertia(iust._kneeMass, kneeCOM, kneeRotationalInertiaRotated);
 
     //Rotor inertia (x-axis and y-axis)
@@ -96,9 +96,9 @@ Quadruped<T> buildIUST()
 
     //Body inertia
     Mat3<T> bodyRotationalInertia;
-    bodyRotationalInertia << 11253, 0, 0, 0, 36203, 0, 0, 0, 42673;
+    bodyRotationalInertia << 84746.639, -505.566, -1520.915, -505.566, 460537.565, 143.817, -1520.915, 143.817, 487181.361;
     bodyRotationalInertia = bodyRotationalInertia * 1e-6;
-    Vec3<T> bodyCOM(0, 0, 0);
+    Vec3<T> bodyCOM(-0.004017, -0.000209, -0.005174);
     Vec3<T> bodyDims(iust._bodyLength, iust._bodyWidth, iust._bodyHeight);
     SpatialInertia<T> bodyInertia(iust._bodyMass, bodyCOM, rotInertiaOfBox(iust._bodyMass, bodyDims));
     

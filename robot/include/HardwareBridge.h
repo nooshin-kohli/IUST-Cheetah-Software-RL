@@ -3,7 +3,7 @@
  * @brief Interface between robot code and robot hardware
  *
  * This class initializes the hardware of both robots and allows the robot
- * controller to access it
+ * controller to access it. It is specialized for Linux systems.
  */
 
 #ifndef PROJECT_HARDWAREBRIDGE_H
@@ -11,8 +11,10 @@
 
 #ifdef linux 
 
+// Maximum stack size for the robot
 #define MAX_STACK_SIZE 16384  // 16KB  of stack
-#define TASK_PRIORITY 49      // linux priority, this is not the nice value
+// Linux priority, this is not the nice value
+#define TASK_PRIORITY 49
 
 #include <string>
 #include <lcm/lcm-cpp.hpp>
@@ -34,27 +36,73 @@
  */
 class HardwareBridge {
  public:
+ /*!
+   * Constructor for the HardwareBridge class.
+   * 
+   * @param robot_ctrl: Pointer to the RobotController object.
+   */
   HardwareBridge(RobotController* robot_ctrl)
-      : statusTask(&taskManager, 0.5f),
-        _interfaceLCM(getLcmUrl(255)),
-        _visualizationLCM(getLcmUrl(255)) {
-    _controller = robot_ctrl;
-    _userControlParameters = robot_ctrl->getUserControlParameters();
-        }
+                : statusTask(&taskManager, 0.5f),
+                _interfaceLCM(getLcmUrl(255)),
+                _visualizationLCM(getLcmUrl(255)) {
+                  _controller = robot_ctrl;
+                  _userControlParameters = robot_ctrl->getUserControlParameters();
+                }
+  /*!
+   * This function is used to prefault the stack.
+   */
   void prefaultStack();
+  /*!
+   * This function is used to setup the scheduler.
+   */
   void setupScheduler();
+  /*!
+   * This function is used to initialize the error.
+   * 
+   * @param reason: The reason for the error.
+   * @param printErrno: Boolean value to indicate if the errno should be printed.
+   */
   void initError(const char* reason, bool printErrno = false);
+  /*!
+   * This function is used to initialize the common elements.
+   */
   void initCommon();
-  ~HardwareBridge() { delete _robotRunner; }
+  /*!
+   * Destructor for the HardwareBridge class.
+   */
+  ~HardwareBridge() {
+    delete _robotRunner;
+  }
+  /*!
+   * This function is used to handle the gamepad LCM.
+   * 
+   * @param rbuf: The receive buffer.
+   * @param chan: The channel.
+   * @param msg: The message.
+   */
   void handleGamepadLCM(const lcm::ReceiveBuffer* rbuf, const std::string& chan,
                         const gamepad_lcmt* msg);
-
+  /*!
+   * This function is used to handle the interface LCM.
+   */
   void handleInterfaceLCM();
+  /*!
+   * This function is used to handle the control parameter.
+   * 
+   * @param rbuf: The receive buffer.
+   * @param chan: The channel.
+   * @param msg: The message.
+   */
   void handleControlParameter(const lcm::ReceiveBuffer* rbuf,
                               const std::string& chan,
                               const control_parameter_request_lcmt* msg);
-
+  /*!
+   * This function is used to publish the visualization LCM.
+   */
   void publishVisualizationLCM();
+  /*!
+   * This function is used to run the sbus.
+   */
   void run_sbus();
 
  protected:
@@ -89,11 +137,32 @@ class HardwareBridge {
  */
 class IUSTrobotHardwareBridge : public HardwareBridge {
 public:
+  /*!
+   * Constructor for IUSTrobotHardwareBridge
+   * 
+   * @param rc Pointer to the RobotController object
+   * @param load_parameters_from_file Boolean value indicating whether to load parameters from a file
+   */
   IUSTrobotHardwareBridge (RobotController* rc, bool load_parameters_from_file);
+  /*!
+   * Runs the SPI
+   */
   void runSpi();
+  /*!
+   * Initializes the hardware
+   */
   void initHardware();
+  /*!
+   * Runs the robot
+   */
   void run();
+  /*!
+   * Runs the Microstrain
+   */
   void runMicrostrain();
+  /*!
+   * Logs the Microstrain data
+   */
   void logMicrostrain();
 
 private:

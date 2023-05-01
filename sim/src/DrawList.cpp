@@ -272,10 +272,10 @@ size_t DrawList::addIUST(Vec4<float> color, bool useOld, bool canHide) {
 
 
   SolidColor bodyColor, abadColor, link1Color, link2Color;
-  bodyColor.rgba = useOld ? Vec4<float>(1, 0, 0, 1.0) : color;
+  bodyColor.rgba = useOld ? Vec4<float>(1, 0.05, 0.05, 1.0) : color;
   bodyColor.useSolidColor = true;
 
-  abadColor.rgba = useOld ? Vec4<float>(0, 0, 0, 0.3) : color;
+  abadColor.rgba = useOld ? Vec4<float>(0, 0, 0, 0.9) : color;
   abadColor.useSolidColor = true;
 
   link1Color.rgba = useOld ? Vec4<float>(0, 0, 0, 0.9) : color;
