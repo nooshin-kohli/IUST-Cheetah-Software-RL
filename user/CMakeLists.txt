@@ -2,3 +2,4 @@
 add_subdirectory(MiLAB_JPos_Controller)
 add_subdirectory(MiLAB_Controller)
 add_subdirectory(MiLAB_Spi_Controller)
+add_subdirectory(New_Joint_Controller)
