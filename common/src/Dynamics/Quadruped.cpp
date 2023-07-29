@@ -56,7 +56,7 @@ bool Quadruped<T>::buildModel(FloatingBaseModel<T>& model) {
                     JointType::Revolute, CoordinateAxis::X, xtreeAbad,
                     xtreeAbadRotor);
     }
-      if (_robotType==RobotType::IUST) {
+      /*if (_robotType==RobotType::IUST) {
           // Hip Joint
           bodyID++;
           Mat6<T> xtreeHip = createSXform(I3,
@@ -97,7 +97,7 @@ bool Quadruped<T>::buildModel(FloatingBaseModel<T>& model) {
               // add foot ground contact point
               model.addGroundContactPoint(bodyID, Vec3<T>(0.0, 0.0, -_kneeLinkLength), true);
           }
-      } else{  //MINI CHEETAH & CHEETAH 3
+      } else{  //MINI CHEETAH & CHEETAH 3 */
           // Hip Joint
           bodyID++;
           Mat6<T> xtreeHip =
@@ -138,7 +138,7 @@ bool Quadruped<T>::buildModel(FloatingBaseModel<T>& model) {
 
               model.addGroundContactPoint(bodyID, Vec3<T>(-0., -_kneeLinkY_offset, -_kneeLinkLength), true);
           }
-      }
+      //}
     // add foot
     //model.addGroundContactPoint(bodyID, Vec3<T>(0, 0, -_kneeLinkLength), true);
 

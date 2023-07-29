@@ -91,10 +91,10 @@ void SpineBoard::run(bool iust) {
   }
 
 //  if IUST robot's abad limitations is different for left and right legs
-//    if (board_num == 1 || board_num == 3) {  //left[-0.75,1.5]
-//        q_limit_upper[0] = -iust_q_limit_low[0];
-//        q_limit_low[0] = -iust_q_limit_upper[0];
-//    }
+   if (board_num == 1 || board_num == 3) {  //left[-0.75,1.5]
+       q_limit_upper[0] = -iust_q_limit_low[0];
+       q_limit_low[0] = -iust_q_limit_upper[0];
+   }
 
   /// Check abad softstop ///
   if (data->q_abad[board_num] > q_limit_upper[0]) {

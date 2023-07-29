@@ -127,8 +127,8 @@ void RobotInterface::sendControlParameter(const std::string &name,
     strcpy((char *)_parameter_request_lcmt.name, name.c_str());
     memcpy(_parameter_request_lcmt.value, &value, sizeof(value));
     _parameter_request_lcmt.parameterKind = (s8)kind;
-    printf("set %s to %s (%d)\n", name.c_str(),
-           controlParameterValueToString(value, kind).c_str(), iteration);
+    if (iteration == TIMES_TO_RESEND_CONTROL_PARAM - 1)
+        printf("[RobotInterface] Set parameter %s to %s\n", name.c_str(), controlParameterValueToString(value, kind).c_str());
 
     // send
     _lcm.publish("interface_request", &_parameter_request_lcmt);

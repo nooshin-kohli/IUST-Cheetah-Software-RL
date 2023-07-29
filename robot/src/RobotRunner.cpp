@@ -37,8 +37,6 @@ void RobotRunner::init() {
   printf("[RobotRunner] initialize\n");
 
   //clear debug Data file
-  std::ofstream fs("/home/IUST-Cheetah-Software/debug_tools/leg_controller_data.txt", std::fstream::out | std::ios_base::trunc);
-  fs.close();
 
   // Build the appropriate Quadruped object
   if (robotType == RobotType::MINI_CHEETAH) {
@@ -111,11 +109,12 @@ void RobotRunner::run() {
     _legController->setEnabled(true);
 
     if( (rc_control.mode == 0) && controlParameters->use_rc ) {
-      if(count_ini%1000 ==0)   printf("ESTOP!\n");
+      if(count_ini%1000 ==0)   printf("[RobotRunner] ESTOP mode && use_rc = 1, wait to start...\n");
       for (int leg = 0; leg < 4; leg++) {
         _legController->commands[leg].zero();
       }
       _robot_ctrl->Estop();
+      _legController->setEnabled(false);
     }else {
       // Controller
 
@@ -235,6 +234,11 @@ void RobotRunner::finalizeStep() {
   _lcm.publish("leg_control_command", &leg_control_command_lcm);
   _lcm.publish("leg_control_data", &leg_control_data_lcm);
   _lcm.publish("state_estimator", &state_estimator_lcm);
+
+  #ifdef DEBUG_SHOW
+  debugPrint(_legController,_stateEstimate);
+  #endif
+
   _iterations++;
 }
 

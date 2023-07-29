@@ -22,7 +22,12 @@
 #include "Utilities/Utilities_print.h"
 
 #define USE_MICROSTRAIN
-#define JPOS_CTRL
+//#define IMU_DEBUG_SHOW
+//#define SPI_DEBUG_SHOW
+//#define JPOS_CTRL
+//#define SPI_CTRL
+//#define LOWLEVEL_CTRL
+#define CMPC_CTRL
 
 /*!
  * If an error occurs during initialization, before motors are enabled, print
@@ -120,8 +125,9 @@ void HardwareBridge::run_sbus() {
 
         if (x) {
             sbus_packet_complete();
-        }
+        } else  printf("[HARDWARE BRIDGE] Receive sbus failed.\n");
     }
+    else  printf("[HARDWARE BRIDGE] Run sbus failed, port<0\n");
 }
 
 /*!
@@ -635,30 +641,38 @@ void IUSTrobotHardwareBridge::run() {
         try {
             _robotParams.initializeFromYamlFile(THIS_COM "config/iust-robot-parameters.yaml");
         } catch(std::exception& e) {
-            printf("Failed to initialize robot parameters from yaml file: %s\n", e.what());
+            printf("[Hardware Bridge] Failed to initialize robot parameters from yaml file: %s\n", e.what());
             exit(1);
         }
 
         if(!_robotParams.isFullyInitialized()) {
-            printf("Failed to initialize all robot parameters\n");
+            printf("[Hardware Bridge] Failed to initialize all robot parameters\n");
             exit(1);
         }
 
-        printf("Loaded robot parameters\n");
+        printf("[Hardware Bridge] Loaded robot parameters\n");
 
         if(_userControlParameters) {
             try {
                 #ifdef CMPC_CTRL
                 _userControlParameters->initializeFromYamlFile(THIS_COM "config/iust-user-parameters.yaml");
                 std::string yamlName = "iust-user-parameters.yaml";
-//                _userControlParameters->initializeFromYamlFile(THIS_COM "config/jpos-user-parameters.yaml");
-//                std::string yamlName = "jpos-user-parameters.yaml";
-                printf("Loaded user parameters from yaml file: %s\n", yamlName.c_str());
+                printf("[Hardware Bridge] Loaded user parameters from yaml file: %s\n", yamlName.c_str());
                 #endif
                 #ifdef JPOS_CTRL
                 _userControlParameters->initializeFromYamlFile(THIS_COM "config/jpos-user-parameters.yaml");
                 std::string yamlName = "jpos-user-parameters.yaml";
-                printf("Loaded user parameters from yaml file: %s\n", yamlName.c_str());
+                printf("[Hardware Bridge] Loaded user parameters from yaml file: %s\n", yamlName.c_str());
+                #endif
+                #ifdef SPI_CTRL
+                _userControlParameters->initializeFromYamlFile(THIS_COM "config/no-parameters.yaml");
+                std::string yamlName = "no-parameters.yaml";
+                printf("[Hardware Bridge] Loaded user parameters from yaml file: %s\n", yamlName.c_str());
+                #endif
+                #ifdef LOWLEVEL_CTRL
+                _userControlParameters->initializeFromYamlFile(THIS_COM "config/lowlevel-user-parameters.yaml");
+                std::string yamlName = "lowlevel-user-parameters.yaml";
+                printf("[Hardware Bridge] Loaded user parameters from yaml file: %s\n", yamlName.c_str());
                 #endif
 
             } catch(std::exception& e) {
@@ -667,13 +681,13 @@ void IUSTrobotHardwareBridge::run() {
             }
 
             if(!_userControlParameters->isFullyInitialized()) {
-                printf("Failed to initialize all user parameters\n");
+                printf("[Hardware Bridge] Failed to initialize all user parameters\n");
                 exit(1);
             }
 
-            printf("Loaded user parameters\n");
+            printf("[Hardware Bridge] Loaded user parameters\n");
         } else {
-            printf("Did not load user parameters because there aren't any\n");
+            printf("[Hardware Bridge] Did not load user parameters because there aren't any\n");
         }
     } else {
         printf("[Hardware Bridge] Loading parameters over LCM...\n");
@@ -747,17 +761,32 @@ void IUSTrobotHardwareBridge::run() {
 }
 
 void IUSTrobotHardwareBridge::runMicrostrain() {
+    printf("[HardwareBridge] Start microstrain\n");
+    u64 imu_times=0;
+
     while (true) {
         _microstrainImu.run();
 
-#ifdef USE_MICROSTRAIN
+        #ifdef USE_MICROSTRAIN
         _vectorNavData.accelerometer = _microstrainImu.acc;
         _vectorNavData.quat[0] = _microstrainImu.quat[1];
         _vectorNavData.quat[1] = _microstrainImu.quat[2];
         _vectorNavData.quat[2] = _microstrainImu.quat[3];
         _vectorNavData.quat[3] = _microstrainImu.quat[0];
         _vectorNavData.gyro = _microstrainImu.gyro;
-#endif
+        #endif
+        imu_times++;
+        #ifdef IMU_DEBUG_SHOW
+        if(imu_times%1000==0)
+        {
+            printf("Iteration stamp:\t%d\n",(int)imu_times);
+            printf("--------------------------------------------------\n");
+            printf("ACC = [%f, %f, %f]\n", _imuData.accelerometer[0], _imuData.accelerometer[1], _imuData.accelerometer[2]);
+            printf("QUAT = [%f, %f, %f, %f]\n", _imuData.quat[0], _imuData.quat[1], _imuData.quat[2], _imuData.quat[3]);
+            printf("GYRO =[%f, %f, %f]\n", _imuData.gyro[0], _imuData.gyro[1], _imuData.gyro[2]);
+            printf("--------------------------------------------------\n");
+        }
+        #endif
     }
 }
 
@@ -772,10 +801,41 @@ void IUSTrobotHardwareBridge::runSpi() {
     spi_command_t* cmd = get_spi_command();
     spi_data_t* data = get_spi_data();
 
-    memcpy(cmd, &_spiCommand, sizeof(spi_command_t));
+    // Send and Receive data and commands through spi hardware for leg-level controller
+    memcpy(cmd, &_spiCommand, sizeof(spi_command_t));   // Copy spiCommand to spi_command_t
     spi_driver_run();
-    memcpy(&_spiData, data, sizeof(spi_data_t));
+    memcpy(&_spiData, data, sizeof(spi_data_t));        // Copy spi_data_t data to _spiData
 
+    #ifdef SPI_DEBUG_SHOW
+    if(spi_times%1000==0)
+        {
+            printf("Iteration stamp:\t%d\n",(int)spi_times);
+            printf("--------------------DATA--------------------------\n");
+            printf("ABAD Q = [%f, %f, %f, %f]\n", data->q_abad[0],data->q_abad[1],data->q_abad[2],data->q_abad[3]);
+            printf("HIP  Q = [%f, %f, %f, %f]\n", data->q_hip[0],data->q_hip[1],data->q_hip[2],data->q_hip[3]);
+            printf("KNEE Q = [%f, %f, %f, %f]\n", data->q_knee[0],data->q_knee[1],data->q_knee[2],data->q_knee[3]);
+            printf("ABAD QD = [%f, %f, %f, %f]\n", data->qd_abad[0],data->qd_abad[1],data->qd_abad[2],data->qd_abad[3]);
+            printf("HIP  QD = [%f, %f, %f, %f]\n", data->qd_hip[0],data->qd_hip[1],data->qd_hip[2],data->qd_hip[3]);
+            printf("KNEE QD = [%f, %f, %f, %f]\n", data->qd_knee[0],data->qd_knee[1],data->qd_knee[2],data->qd_knee[3]);
+            printf("-------------------COMMAND------------------------\n");
+            printf("ABAD DES Q = [%f, %f, %f, %f]\n", _spiCommand.q_des_abad[0],_spiCommand.q_des_abad[1],_spiCommand.q_des_abad[2],_spiCommand.q_des_abad[3]);
+            printf("HIP  DES Q = [%f, %f, %f, %f]\n", _spiCommand.q_des_hip[0],_spiCommand.q_des_hip[1],_spiCommand.q_des_hip[2],_spiCommand.q_des_hip[3]);
+            printf("KNEE DES Q = [%f, %f, %f, %f]\n", _spiCommand.q_des_knee[0],_spiCommand.q_des_knee[1],_spiCommand.q_des_knee[2],_spiCommand.q_des_knee[3]);
+            printf("KP A= [%f, %f, %f, %f]\n", _spiCommand.kp_abad[0],_spiCommand.kp_abad[1],_spiCommand.kp_abad[2],_spiCommand.kp_abad[3]);
+            printf("KP H= [%f, %f, %f, %f]\n", _spiCommand.kp_hip[0],_spiCommand.kp_hip[1],_spiCommand.kp_hip[2],_spiCommand.kp_hip[3]);
+            printf("KP K= [%f, %f, %f, %f]\n", _spiCommand.kp_knee[0],_spiCommand.kp_knee[1],_spiCommand.kp_knee[2],_spiCommand.kp_knee[3]);
+            printf("KD A= [%f, %f, %f, %f]\n", _spiCommand.kd_abad[0],_spiCommand.kd_abad[1],_spiCommand.kd_abad[2],_spiCommand.kd_abad[3]);
+            printf("KD H= [%f, %f, %f, %f]\n", _spiCommand.kd_hip[0],_spiCommand.kd_hip[1],_spiCommand.kd_hip[2],_spiCommand.kd_hip[3]);
+            printf("KD K= [%f, %f, %f, %f]\n", _spiCommand.kd_knee[0],_spiCommand.kd_knee[1],_spiCommand.kd_knee[2],_spiCommand.kd_knee[3]);
+            printf("ABAD DES T = [%f, %f, %f, %f]\n", _spiCommand.tau_abad_ff[0],_spiCommand.tau_abad_ff[1],_spiCommand.tau_abad_ff[2],_spiCommand.tau_abad_ff[3]);
+            printf("HIP  DES T = [%f, %f, %f, %f]\n", _spiCommand.tau_hip_ff[0],_spiCommand.tau_hip_ff[1],_spiCommand.tau_hip_ff[2],_spiCommand.tau_hip_ff[3]);
+            printf("KNEE DES T = [%f, %f, %f, %f]\n", _spiCommand.tau_knee_ff[0],_spiCommand.tau_knee_ff[1],_spiCommand.tau_knee_ff[2],_spiCommand.tau_knee_ff[3]);
+
+            printf("--------------------------------------------------\n");
+        }
+    #endif
+
+    // Nobody subscribe following lcm
     _spiLcm.publish("spi_data", data);
     _spiLcm.publish("spi_command", cmd);
 }

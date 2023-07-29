@@ -280,6 +280,9 @@
          <attribute name="horizontalHeaderDefaultSectionSize">
           <number>196</number>
          </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>28</number>
+         </attribute>
          <row/>
          <column/>
          <column/>

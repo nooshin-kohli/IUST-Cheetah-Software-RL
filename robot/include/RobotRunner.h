@@ -45,7 +45,7 @@ class RobotRunner : public PeriodicTask {
 
   GamepadCommand* driverCommand;
   RobotType robotType;
-  VectorNavData* vectorNavData;
+  ImuData* vectorNavData;
   CheaterState<double>* cheaterState;
   SpiData* spiData;
   SpiCommand* spiCommand;
@@ -57,12 +57,12 @@ class RobotRunner : public PeriodicTask {
 
  private:
   float _ini_yaw;
-
+  bool motorError = false;
   int iter = 0;
 
   void setupStep();
   void finalizeStep();
-
+  void debugPrint(LegController<float>* legs, StateEstimate<float> states);
   JPosInitializer<float>* _jpos_initializer;
   Quadruped<float> _quadruped;
   LegController<float>* _legController = nullptr;

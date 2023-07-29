@@ -166,7 +166,7 @@ public:
   void logMicrostrain();
 
 private:
-  VectorNavData _vectorNavData;
+  ImuData _vectorNavData;
   lcm::LCM _spiLcm;
   lcm::LCM _microstrainLcm;
   std::thread _microstrainThread;
@@ -174,6 +174,7 @@ private:
   microstrain_lcmt _microstrainData;
   bool _microstrainInit = false;
   bool _load_parameters_from_file;
+  u64 spi_times=0;
 };
 
 /*!
@@ -191,7 +192,7 @@ class MiniCheetahHardwareBridge : public HardwareBridge {
   void abort(const char* reason);
 
  private:
-  VectorNavData _vectorNavData;
+  ImuData _vectorNavData;
   lcm::LCM _spiLcm;
   lcm::LCM _microstrainLcm;
   std::thread _microstrainThread;
@@ -214,7 +215,7 @@ public:
   // todo imu?
 
 private:
-  VectorNavData _vectorNavData;
+  ImuData _vectorNavData;
   lcm::LCM _ecatLCM;
   ecat_command_t ecatCmdLcm;
   ecat_data_t ecatDataLcm;

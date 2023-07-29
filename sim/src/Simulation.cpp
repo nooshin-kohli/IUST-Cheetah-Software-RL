@@ -354,7 +354,7 @@ void Simulation::step(double dt, double dtLowLevelControl,
             _spineBoards[leg].torque_out[joint],
             _simulator->getState().qd[leg * 3 + joint]);
       }
-      printf("leg %d %4.3f %4.3f %4.3f\n",leg,_tau[leg*3],_tau[leg*3+1],_tau[leg*3+2]);
+      //printf("leg %d %4.3f %4.3f %4.3f\n",leg,_tau[leg*3],_tau[leg*3+1],_tau[leg*3+2]);
     }
   } else if (_robot == RobotType::MINI_CHEETAH) {
     for (int leg = 0; leg < 4; leg++) {
@@ -363,7 +363,7 @@ void Simulation::step(double dt, double dtLowLevelControl,
             _spineBoards[leg].torque_out[joint],
             _simulator->getState().qd[leg * 3 + joint]);
       }
-      printf("leg %d %4.3f %4.3f %4.3f\n",leg,_tau[leg*3],_tau[leg*3+1],_tau[leg*3+2]);
+      //printf("leg %d %4.3f %4.3f %4.3f\n",leg,_tau[leg*3],_tau[leg*3+1],_tau[leg*3+2]);
     }
   } else if (_robot == RobotType::CHEETAH_3) {
     for (int leg = 0; leg < 4; leg++) {
@@ -372,7 +372,7 @@ void Simulation::step(double dt, double dtLowLevelControl,
             _tiBoards[leg].data->tau_des[joint],
             _simulator->getState().qd[leg * 3 + joint]);
       }
-      printf("leg %d %4.3f %4.3f %4.3f\n",leg,_tau[leg*3],_tau[leg*3+1],_tau[leg*3+2]);
+      //printf("leg %d %4.3f %4.3f %4.3f\n",leg,_tau[leg*3],_tau[leg*3+1],_tau[leg*3+2]);
     }
   } else {
     assert(false);
@@ -701,7 +701,7 @@ void Simulation::runAtSpeed(std::function<void(std::string)> errorCallback, bool
 
 void Simulation::loadTerrainFile(const std::string& terrainFileName,
                                  bool addGraphics) {
-  printf("load terrain %s\n", terrainFileName.c_str());
+  printf("[Simulation] load terrain files: %s\n", terrainFileName.c_str());
   ParamHandler paramHandler(terrainFileName);
 
   if (!paramHandler.fileOpenedSuccessfully()) {
@@ -732,7 +732,7 @@ void Simulation::loadTerrainFile(const std::string& terrainFileName,
       for (size_t i = 0; i < idx; i++) val[i] = v[i];
     };
 
-    printf("terrain element %s\n", key.c_str());
+    printf("[Simulation] terrain element: %s\n", key.c_str());
     std::string typeName;
     paramHandler.getString(key, "type", typeName);
     if (typeName == "infinite-plane") {

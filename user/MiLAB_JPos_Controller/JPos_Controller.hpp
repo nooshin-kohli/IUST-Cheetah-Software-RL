@@ -2,7 +2,6 @@
 #define JPOS_CONTROLLER
 
 #include <RobotController.h>
-//#include <RobotRunner.h>
 #include "JPosUserParameters.h"
 #include <Controllers/FootSwingTrajectory.h>
 #include <Controllers/StateEstimatorContainer.h>
@@ -19,8 +18,6 @@ class JPos_Controller:public RobotController{
     void leg_JointPD(int leg, Vec3<float> qDes, Vec3<float> qdDes);
     void leg_Passive(int leg);
 
-
-//    Vec3<float> getHipLocation(int leg);
     void leg_CartesianPD(int leg, double stepHeight,int motion_iter, Mat3<float> rBody, Vec3<float> position, Vec3<float> vWorld, Vec3<float> pHip);
 
     virtual ~JPos_Controller(){}
@@ -37,7 +34,6 @@ class JPos_Controller:public RobotController{
     Vec3<float> _pfoot_ini;
     Vec3<float> zero_vec3;
     JPosUserParameters userParameters;
-//    StateEstimate<float> _stateEstimator;
 
   private:
     StateEstimatorContainer<float>* _stateEstimator;

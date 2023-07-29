@@ -81,7 +81,7 @@ void ConvexMPCLocomotion::recompute_timing(int iterations_per_mpc) {
 
 void ConvexMPCLocomotion::_SetupCommand(ControlFSMData<float> & data){
     if(data._quadruped->_robotType == RobotType::IUST) {
-        _body_height = 0.49;
+        _body_height = 0.35;
     }else if(data._quadruped->_robotType == RobotType::MINI_CHEETAH){
         _body_height = 0.29;
     }else if(data._quadruped->_robotType == RobotType::CHEETAH_3){
@@ -292,7 +292,7 @@ void ConvexMPCLocomotion::run(ControlFSMData<float>& data) {
     recompute_timing(default_iterations_between_mpc);
 
     if (data._quadruped->_robotType == RobotType::IUST) {
-        _body_height = 0.49;
+        _body_height = 0.35;
     } else if (data._quadruped->_robotType == RobotType::MINI_CHEETAH) {
         _body_height = 0.29;
     } else if (data._quadruped->_robotType == RobotType::CHEETAH_3) {
