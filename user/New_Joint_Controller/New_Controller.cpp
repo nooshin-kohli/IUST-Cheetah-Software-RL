@@ -18,6 +18,10 @@ void New_Controller::legDetection(){
         leg_enable << 0, 0, 0, 1;
         printf("Rear left leg is enable...\n");
     }
+    if (_driverCommand->x){
+        leg_enable << 1, 1, 1, 1;
+        printf("All legs are enable...\n");
+    }
 }
 
 void New_Controller::jointDetection(){
@@ -125,14 +129,26 @@ void New_Controller::runController(){
                 _legController->commands[leg].kpJoint = kpMat;
                 _legController->commands[leg].kdJoint = kdMat;
                 if (leg_enable[leg]){
-                    for(int jidx(0); jidx<3; ++jidx){
-                        if (joint_enable[jidx]){
-                            Eigen::Vector2f gamepadcmd = _driverCommand->leftStickAnalog;
-                            printf("Desired Velocity is %f\n",gamepadcmd[1]);
-                            _legController->commands[leg].qdDes[jidx] = gamepadcmd[1] * userParameters.move_range;
-                        } else {
-                            _legController->commands[leg].qDes[jidx] = _legController->datas[leg].q[jidx];
-                        }
+
+                    _legController->commands[leg].qDes[0] = _new_stand[leg][0] + _driverCommand->leftStickAnalog[1];
+                    _legController->commands[leg].qDes[1] = _new_stand[leg][1] + _driverCommand->leftStickAnalog[0];
+                    _legController->commands[leg].qDes[2] = _new_stand[leg][2] + _driverCommand->rightStickAnalog[1];
+
+                    // for(int jidx(0); jidx<3; ++jidx){
+                    //     if (joint_enable[jidx]){
+                    //         Eigen::Vector2f gamepadcmd = _driverCommand->leftStickAnalog;
+                    //         printf("Desired Velocity is %f\n",gamepadcmd[1]);
+                    //         if (jidx == 2)
+                    //             _legController->commands[leg].qDes[jidx] = _new_stand[leg][jidx] + gamepadcmd[1] * userParameters.move_range * 6;
+                    //         else
+                    //             _legController->commands[leg].qDes[jidx] = _new_stand[leg][jidx] + gamepadcmd[1] * userParameters.move_range;
+                    //     } else {
+                    //         _legController->commands[leg].qDes[jidx] = _legController->datas[leg].q[jidx];
+                    //     }
+                    // }
+                } else {
+                    for(int jidx(0); jidx<3; ++jidx) {
+                        _legController->commands[leg].qDes[jidx] = _new_stand[leg][jidx];
                     }
                 }
             }

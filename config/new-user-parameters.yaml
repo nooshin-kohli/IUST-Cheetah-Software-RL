@@ -7,7 +7,7 @@ max_tau : 45.               # Maximum torque
 max_iter : 10000            # Maximum iterations
 
 #　Motor move parameters
-move_range : 1              # Range of motion
+move_range : 10             # Range of motion
 move_offset : 0.0           # Offset of motion
 
 # Motor selection
