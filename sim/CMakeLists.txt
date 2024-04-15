@@ -3,9 +3,9 @@ project(sim)
 
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(Qt5Core_DIR ~/Qt/Tools/QtDesignStudio/qt5_design_studio_reduced_version/lib/cmake/Qt5Core)
-set(Qt5Widgets_DIR ~/Qt/Tools/QtDesignStudio/qt5_design_studio_reduced_version/lib/cmake/Qt5Widgets)
-set(Qt5Gamepad_DIR ~/Qt/Tools/QtDesignStudio/qt5_design_studio_reduced_version/lib/cmake/Qt5Gamepad)
+set(Qt5Core_DIR ~/Qt5.10.0/5.10.0/gcc_64/lib/cmake/Qt5Core)
+set(Qt5Widgets_DIR ~/Qt5.10.0/5.10.0/gcc_64/lib/cmake/Qt5Widgets)
+set(Qt5Gamepad_DIR ~/Qt5.10.0/5.10.0/gcc_64/lib/cmake/Qt5Gamepad)
 
 
 execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/find_qt_path.sh OUTPUT_VARIABLE CMAKE_PREFIX_PATH_1)
