@@ -31,8 +31,8 @@ class policy_Controller:public RobotController{
     //void updateRaspCommand();
     //void updateGamepadCommand();
     //void legDetection();
-    //float leg_Interpolation(const size_t & curr_iter, size_t max_iter,
-    //                       const float & ini, const float & fin);
+    float leg_Interpolation(const size_t & curr_iter, size_t max_iter,
+                          const float & ini, const float & fin);
     virtual ControlParameters* getUserControlParameters() {
       return &userParameters;
     }
