@@ -58,23 +58,23 @@ void policy_Controller::runController() {
   ++j_iter;
   std::cout<<j_iter;
 
-  if (j_iter<200){
-    for (int i(0); i<4 ; i++){
-      q_now[3*i] = _legController->datas[i].q[0];
-      q_now[3*i+1] =_legController->datas[i].q[1];
-      q_now[3*i+2] =_legController->datas[i].q[2];
-    }
-    float q_home[12] = {0.0,0.8,-1.7,0.0,0.8,-1.7,0.0,0.8,-1.7,0.0,0.8,-1.7,};
-    float q_des[12];
-    for(int i(0); i < 12; i++) {
-          q_des[i] = leg_Interpolation(j_iter, j_iter+100, q_now[i], q_home[i]);
-          _legController->commands[0].qDes = {q_des[0],q_des[1],q_des[2]};
-          _legController->commands[1].qDes = {q_des[3],q_des[4],q_des[5]};
-          _legController->commands[2].qDes = {q_des[6],q_des[7],q_des[8]};
-          _legController->commands[3].qDes = {q_des[9],q_des[10],q_des[11]};
-        }
+  // if (j_iter<200){
+  //   for (int i(0); i<4 ; i++){
+  //     q_now[3*i] = _legController->datas[i].q[0];
+  //     q_now[3*i+1] =_legController->datas[i].q[1];
+  //     q_now[3*i+2] =_legController->datas[i].q[2];
+  //   }
+  //   float q_home[12] = {0.0,0.8,-1.7,0.0,0.8,-1.7,0.0,0.8,-1.7,0.0,0.8,-1.7,};
+  //   float q_des[12];
+  //   for(int i(0); i < 12; i++) {
+  //         q_des[i] = leg_Interpolation(j_iter, j_iter+100, q_now[i], q_home[i]);
+  //         _legController->commands[0].qDes = {q_des[0],q_des[1],q_des[2]};
+  //         _legController->commands[1].qDes = {q_des[3],q_des[4],q_des[5]};
+  //         _legController->commands[2].qDes = {q_des[6],q_des[7],q_des[8]};
+  //         _legController->commands[3].qDes = {q_des[9],q_des[10],q_des[11]};
+  //       }
 
-  }
+  // }
   //legDetection();
 
   // Real Robot

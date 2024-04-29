@@ -1,0 +1,12 @@
+# Generated on Tues Mar 9 10:42:08 2021
+# Modified on mc-mit-ctrl-user-parameters.yaml
+# Author: Yinuo Wang
+__collection-name__: user-parameters
+
+tau_ff:     0
+kp:         500
+kd:         5
+zero:       0
+calibrate:  0
+max_tau:    45.
+move_range: 0.5
