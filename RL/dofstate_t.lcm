@@ -1,0 +1,7 @@
+package dofstatelcm;
+
+struct dofstate_t
+{
+    double dof_pos[12];
+    double dof_vel[12];
+}

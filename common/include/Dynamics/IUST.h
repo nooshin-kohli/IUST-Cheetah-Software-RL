@@ -25,7 +25,7 @@ Quadruped<T> buildIUST()
     iust._robotType = RobotType::IUST;
 
     //Mass(kg)
-    iust._bodyMass = 16;
+    iust._bodyMass = 4.4;
     iust._abadMass = 0.861;
     iust._hipMass = 1.598;
     iust._kneeMass = 0.304;
@@ -33,7 +33,7 @@ Quadruped<T> buildIUST()
 
     //Dimentions(m)
     iust._bodyLength = 0.375; //0.269 *
-    iust._bodyWidth = 0.10054; //0.19054 *
+    iust._bodyWidth = 0.10; //0.19054 *
     iust._bodyHeight = 0.089;
 
     //Gear ratios
@@ -54,8 +54,8 @@ Quadruped<T> buildIUST()
     iust._batteryV = 36;
     iust._motorKT = 0.08;   //(MiLab Team: this is flux linkage * pole pairs)
     iust._motorR = 0.13;
-    iust._jointDamping = 0.02;
-    iust._jointDryFriction = 0.4;
+    iust._jointDamping = 0.0;
+    iust._jointDryFriction = 0.0;
 
     //Rotor inertia (if the rotor is oriented so it spins around the z-axis)
     Mat3<T> rotorRotationalInertiaZ;

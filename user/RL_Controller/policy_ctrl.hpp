@@ -59,6 +59,8 @@ class policy_Controller:public RobotController{
     
     long j_iter = 0;
     int motion_iter = 0;
+    bool flag = false;
+    bool repair = false;
 
     Vec4<int> leg_enable;
     //Vec3<float> desGamepadCommand;

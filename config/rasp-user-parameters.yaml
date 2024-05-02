@@ -4,8 +4,8 @@
 __collection-name__: user-parameters
 
 tau_ff:     0
-kp:         500
-kd:         5
+kp:         300
+kd:         3
 zero:       0
 calibrate:  0
 max_tau:    45.

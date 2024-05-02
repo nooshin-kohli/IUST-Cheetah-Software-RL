@@ -9,4 +9,5 @@ struct observ_t
     double dof_pos[12];
     double dof_vel[12];
     double action[12];
+    double quaternion[4];
 }

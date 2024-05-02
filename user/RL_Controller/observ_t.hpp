@@ -30,6 +30,8 @@ class observ_t
 
         double     action[12];
 
+        double     quaternion[4];
+
     public:
         /**
          * Encode a message into binary form.
@@ -147,6 +149,9 @@ int observ_t::_encodeNoHash(void *buf, int offset, int maxlen) const
     tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->action[0], 12);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->quaternion[0], 4);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     return pos;
 }
 
@@ -175,6 +180,9 @@ int observ_t::_decodeNoHash(const void *buf, int offset, int maxlen)
     tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->action[0], 12);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->quaternion[0], 4);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     return pos;
 }
 
@@ -188,12 +196,13 @@ int observ_t::_getEncodedSizeNoHash() const
     enc_size += __double_encoded_array_size(NULL, 12);
     enc_size += __double_encoded_array_size(NULL, 12);
     enc_size += __double_encoded_array_size(NULL, 12);
+    enc_size += __double_encoded_array_size(NULL, 4);
     return enc_size;
 }
 
 uint64_t observ_t::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0x8865db7fe4453a7dLL;
+    uint64_t hash = 0x598ffe4f8c8829c0LL;
     return (hash<<1) + ((hash>>63)&1);
 }
 
